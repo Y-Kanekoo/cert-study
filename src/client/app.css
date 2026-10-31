@@ -200,6 +200,27 @@ h3 {
 .choice.wrong {
   border-color: var(--bad);
 }
+.multi-choices {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.multi-choices legend {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.multi-choices .choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.multi-choices input {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  accent-color: var(--brand);
+}
 .feedback {
   border-left: 4px solid var(--brand);
   padding: 12px 16px;
