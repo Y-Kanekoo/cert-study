@@ -1,0 +1,1042 @@
+[
+  {
+    "id": "fe-b-0101",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "測定値の配列から最初に7が現れる位置を返す。inspect()の戻り値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: inspect()\n  整数型の配列: a ← {4, 7, 2, 7, 9}\n  整数型: i, found ← 0\n  for (i を 1 から 5 まで 1 ずつ増やす)\n    if a[i] = 7 and found = 0 then\n      found ← i\n    endif\n  endfor\n  return found",
+    "choices": [
+      "2",
+      "4",
+      "1",
+      "0"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "最初の7がある位置は2である。",
+      "最後に見つかる7の位置を返した場合の値。",
+      "先頭要素の位置をそのまま返した値。",
+      "7は配列中にあるので未発見にはならない。"
+    ],
+    "explanation": "2番目の要素で最初の7を見つけ、foundを2にする。その後の7ではfoundが0でないため更新しない。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0102",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "昇順に並ぶ点数から、6以下の最大値の位置を求める。boundary()の戻り値はどれか。配列の要素番号は1から始まり、÷は整数商である。",
+    "code": "○整数型: boundary()\n  整数型の配列: a ← {2, 4, 4, 6, 8, 10}\n  整数型: left ← 1, right ← 6, mid, result ← 0\n  while left ≤ right\n    mid ← (left + right) ÷ 2\n    if a[mid] ≤ 6 then\n      result ← mid\n      left ← mid + 1\n    else\n      right ← mid - 1\n    endif\n  endwhile\n  return result",
+    "choices": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "a[3]までは条件を満たすが、a[4]も6以下である。",
+      "探索後のresultは4である。",
+      "a[5]は8であり条件を満たさない。",
+      "配列長をそのまま位置とした値。"
+    ],
+    "explanation": "midは3、5、4の順に調べる。条件を満たす位置をresultに記録し、最後に4を返す。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0103",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "昇順配列から11を二分探索する。終了までにcount ← count + 1の行が何回実行されるか。配列の要素番号は1から始まり、÷は整数商である。",
+    "code": "○整数型: misses()\n  整数型の配列: a ← {1, 3, 5, 7, 9, 12, 14}\n  整数型: left ← 1, right ← 7, mid, count ← 0\n  while left ≤ right\n    mid ← (left + right) ÷ 2\n    count ← count + 1\n    if a[mid] = 11 then\n      return count\n    elseif a[mid] < 11 then\n      left ← mid + 1\n    else\n      right ← mid - 1\n    endif\n  endwhile\n  return count",
+    "choices": [
+      "2",
+      "4",
+      "3",
+      "7"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "最後の候補を調べる前に止めた場合の回数。",
+      "範囲が空になった後も比較した場合の回数。",
+      "比較した要素はa[4]、a[6]、a[5]の3個である。",
+      "線形探索の全件比較と混同した回数。"
+    ],
+    "explanation": "midは4、6、5と移り、7、12、9を比較する。最後にleftが6、rightが5となり、比較行は3回である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0104",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "挿入整列で先頭4要素まで処理した直後の配列はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型の配列: insertPart()\n  整数型の配列: a ← {6, 2, 5, 3, 1}\n  整数型: i, j, key\n  for (i を 2 から 4 まで 1 ずつ増やす)\n    key ← a[i]\n    j ← i - 1\n    while j ≥ 1 and a[j] > key\n      a[j + 1] ← a[j]\n      j ← j - 1\n    endwhile\n    a[j + 1] ← key\n  endfor\n  return a",
+    "choices": [
+      "{1, 2, 3, 5, 6}",
+      "{2, 5, 6, 3, 1}",
+      "{2, 3, 6, 5, 1}",
+      "{2, 3, 5, 6, 1}"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "5番目の要素まで整列した場合の配列。",
+      "i=3の処理直後で止めた配列。",
+      "最後の挿入で5を右にずらし忘れた配列。",
+      "i=4の処理後は先頭4要素が2、3、5、6となる。"
+    ],
+    "explanation": "先頭から処理済みの範囲だけを整列する。i=4では3を2と5の間へ挿入するので、末尾の1は動かない。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0105",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "選択整列の内側で行う大小比較は合計何回か。配列の要素番号は1から始まる。",
+    "code": "○整数型: selectCount()\n  整数型の配列: a ← {8, 1, 6, 3, 5}\n  整数型: i, j, minPos, temp, count ← 0\n  for (i を 1 から 4 まで 1 ずつ増やす)\n    minPos ← i\n    for (j を i + 1 から 5 まで 1 ずつ増やす)\n      count ← count + 1\n      if a[j] < a[minPos] then\n        minPos ← j\n      endif\n    endfor\n    temp ← a[i]\n    a[i] ← a[minPos]\n    a[minPos] ← temp\n  endfor\n  return count",
+    "choices": [
+      "10",
+      "4",
+      "9",
+      "20"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "4+3+2+1で10回となる。",
+      "外側の繰返し回数だけを数えた値。",
+      "最後の1回の比較を数え忘れた値。",
+      "外側の4回で毎回5件比較すると誤認した値。"
+    ],
+    "explanation": "比較回数はi=1から順に4、3、2、1回である。合計は10回で、要素の大小関係には依存しない。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0106",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "交換が起きなくなったら終了するバブル整列で、外側の繰返しは何回行われるか。",
+    "code": "○整数型: bubblePass()\n  整数型の配列: a ← {2, 1, 3, 4}\n  整数型: i, j, temp, pass ← 0\n  論理型: changed ← true\n  i ← 4\n  while i > 1 and changed\n    changed ← false\n    pass ← pass + 1\n    for (j を 1 から i - 1 まで 1 ずつ増やす)\n      if a[j] > a[j + 1] then\n        temp ← a[j]\n        a[j] ← a[j + 1]\n        a[j + 1] ← temp\n        changed ← true\n      endif\n    endfor\n    i ← i - 1\n  endwhile\n  return pass",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "最初の交換後、整列確認の回を省いた値。",
+      "交換の回と交換なしを確認する回の計2回である。",
+      "交換がなくても最後まで外側を回した値。",
+      "配列の要素数をそのまま回数にした値。"
+    ],
+    "explanation": "1回目に2と1を交換し、changedは真になる。2回目には交換が起きず、次のwhile判定で終了する。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0107",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "昇順の二つの配列を併合し、先頭から5個を書き込んだ時点の出力配列はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型の配列: mergePrefix()\n  整数型の配列: a ← {2, 5, 9, 11}\n  整数型の配列: b ← {1, 5, 7, 12}\n  整数型の配列: out ← {0, 0, 0, 0, 0}\n  整数型: i ← 1, j ← 1, k\n  for (k を 1 から 5 まで 1 ずつ増やす)\n    if a[i] ≤ b[j] then\n      out[k] ← a[i]\n      i ← i + 1\n    else\n      out[k] ← b[j]\n      j ← j + 1\n    endif\n  endfor\n  return out",
+    "choices": [
+      "{1, 2, 5, 7, 9}",
+      "{2, 1, 5, 5, 7}",
+      "{1, 2, 5, 5, 7}",
+      "{1, 2, 5, 5, 9}"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "同値の5を一つにまとめた場合の列。",
+      "最初にa側を無条件に選んだ場合の列。",
+      "先頭5個は1、2、5、5、7である。",
+      "b[3]の7を飛ばした場合の列。"
+    ],
+    "explanation": "1と2を選んだ後、同値の5ではa側を先に選ぶ。次にb側の5と7を選ぶので、5は二つとも残る。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0108",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "先頭要素を基準値として配列を分割する。partition()が返す基準値の最終位置はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: partition()\n  整数型の配列: a ← {5, 8, 2, 7, 3, 6, 1}\n  整数型: pivot ← a[1], i ← 1, j, temp\n  for (j を 2 から 7 まで 1 ずつ増やす)\n    if a[j] < pivot then\n      i ← i + 1\n      temp ← a[i]\n      a[i] ← a[j]\n      a[j] ← temp\n    endif\n  endfor\n  temp ← a[1]\n  a[1] ← a[i]\n  a[i] ← temp\n  return i",
+    "choices": [
+      "3",
+      "5",
+      "1",
+      "4"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "基準値より小さい要素の個数をそのまま位置とした値。",
+      "基準値以下の要素を一つ多く数えた値。",
+      "基準値を交換前の位置のままとした値。",
+      "基準値より小さい要素が3個あるので最終位置は4である。"
+    ],
+    "explanation": "5より小さい要素は2、3、1の3個である。iは1から3回増えて4になり、基準値はa[4]へ移る。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0109",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "再帰関数digitSum(3042)の戻り値はどれか。÷は整数商、modは余りを表す。",
+    "code": "○整数型: digitSum(整数型: n)\n  if n = 0 then\n    return 0\n  endif\n  return n mod 10 + digitSum(n ÷ 10)",
+    "choices": [
+      "9",
+      "5",
+      "3042",
+      "12"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "各桁の和は3+0+4+2=9である。",
+      "先頭の3と末尾の2だけを足した場合の値。",
+      "再帰処理をせず引数を返した場合の値。",
+      "先頭の3を二重に加えた場合の値。"
+    ],
+    "explanation": "各呼出しで末尾の1桁を取り出して足す。2+4+0+3=9であり、nが0になったら加算は止まる。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0110",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "再帰関数ways(5)の戻り値はどれか。1回で1段または2段進む方法の数を返す。",
+    "code": "○整数型: ways(整数型: n)\n  整数型: left, right\n  if n = 0 then\n    return 1\n  elseif n < 0 then\n    return 0\n  endif\n  left ← ways(n - 1)\n  right ← ways(n - 2)\n  return left + right",
+    "choices": [
+      "5",
+      "8",
+      "13",
+      "10"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "2段進む分岐を十分に数えない場合の値。",
+      "ways(5)はways(4)+ways(3)=5+3=8である。",
+      "1段多いways(6)の値。",
+      "2段の置き方を重複して数えた値。"
+    ],
+    "explanation": "ways(0)=1、ways(1)=1から、ways(2)=2、ways(3)=3、ways(4)=5と進む。したがってways(5)=5+3=8である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0111",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "文字列の両端から照合する関数sameEnds(\"level\")の戻り値はどれか。文字の位置は1から始まる。",
+    "code": "○整数型: sameEnds(文字列型: s)\n  整数型: left ← 1, right ← 文字数(s), matched ← 0\n  while left < right\n    if s[left] ≠ s[right] then\n      return -1\n    endif\n    matched ← matched + 1\n    left ← left + 1\n    right ← right - 1\n  endwhile\n  return matched",
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "最初の対応する文字を比較せずに終了した値。",
+      "外側の一組だけを数えた値。",
+      "左右で一致した組は2組である。",
+      "中央の文字も一組として数えた値。"
+    ],
+    "explanation": "1文字目と5文字目、2文字目と4文字目がそれぞれ一致する。一致した組を二つ数え、中央の文字は数えない。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0112",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "スタックの操作列を実行し、最後の5を積んだ直後のtopの値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: stackTop()\n  整数型の配列: stack ← {0, 0, 0, 0, 0}\n  整数型: top ← 0, x\n  top ← top + 1\n  stack[top] ← 4\n  top ← top + 1\n  stack[top] ← 7\n  x ← stack[top]\n  top ← top - 1\n  top ← top + 1\n  stack[top] ← x + 2\n  top ← top + 1\n  stack[top] ← 5\n  return top",
+    "choices": [
+      "2",
+      "4",
+      "5",
+      "3"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "最後の5を積む前のtopの値。",
+      "取り出した7も残っていると数えた値。",
+      "スタックの容量を返した場合の値。",
+      "topは0→1→2→1→2→3と変化する。"
+    ],
+    "explanation": "4、7を積んでtopは2となり、7を取り出して1になる。その後9と5を積むのでtopは3である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0113",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "長さ5の循環キューで、操作後の取り出し値を求める。添字は1から始まり、modは余りを表す。",
+    "code": "○整数型: queueValue()\n  整数型の配列: q ← {40, 50, 0, 20, 30}\n  整数型: head ← 4, tail ← 2, x\n  x ← q[head]\n  head ← head mod 5 + 1\n  q[tail] ← 60\n  tail ← tail mod 5 + 1\n  x ← q[head]\n  head ← head mod 5 + 1\n  q[tail] ← 70\n  tail ← tail mod 5 + 1\n  return q[head]",
+    "choices": [
+      "40",
+      "20",
+      "30",
+      "50"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "循環したheadは1となりq[1]=40を読む。",
+      "最初の取り出し値。",
+      "2回目の取り出し値。",
+      "headではなく、更新前のtailが指す値を読んだ場合の値。"
+    ],
+    "explanation": "headは4→5→1と進み、取り出し値は20、30の順になる。最後にq[1]を参照するので40を返す。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0114",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "単方向リストで、節点2の後に節点4を挿入する。先頭からたどった値の順序はどれか。nextの0は末尾を表す。",
+    "code": "○整数型の配列: linkOrder()\n  整数型の配列: value ← {10, 30, 50, 40}\n  整数型の配列: next ← {2, 3, 0, 0}\n  整数型の配列: out ← {0, 0, 0, 0}\n  整数型: p ← 1, i\n  next[4] ← next[2]\n  next[2] ← 4\n  for (i を 1 から 4 まで 1 ずつ増やす)\n    out[i] ← value[p]\n    p ← next[p]\n  endfor\n  return out",
+    "choices": [
+      "{10, 30, 50, 40}",
+      "{10, 30, 40, 50}",
+      "{10, 40, 30, 50}",
+      "{10, 30, 40, 40}"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "節点の配列順をそのまま読んだ列。",
+      "節点番号1→2→4→3の値を読んだ列。",
+      "節点1の後へ挿入した場合の列。",
+      "節点4のnextを自分自身にした場合の列。"
+    ],
+    "explanation": "next[4]に元のnext[2]である3を入れ、next[2]を4にする。先頭からの節点番号は1→2→4→3となる。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0115",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "二分木を前順でたどったとき、訪問順はどれか。0は子がないことを表す。配列の要素番号は1から始まる。",
+    "code": "○手続: visit(整数型: p)\n  if p = 0 then\n    return\n  endif\n  出力(value[p])\n  visit(left[p])\n  visit(right[p])\n\n整数型の配列: value ← {8, 3, 10, 1, 6}\n整数型の配列: left ← {2, 4, 0, 0, 0}\n整数型の配列: right ← {3, 5, 0, 0, 0}\nvisit(1)",
+    "choices": [
+      "1, 3, 6, 8, 10",
+      "1, 6, 3, 10, 8",
+      "8, 3, 1, 6, 10",
+      "8, 3, 10, 1, 6"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "中順で訪問した場合の列。",
+      "後順で訪問した場合の列。",
+      "前順は8→3→1→6→10である。",
+      "配列の格納順を読んだ列。"
+    ],
+    "explanation": "前順は現在の節点、左の部分木、右の部分木の順に訪問する。根8から左の3、1、6を訪問した後、右の10を訪問する。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0116",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "二分木を中順でたどる。4番目に出力される値はどれか。0は子がないことを表し、配列の要素番号は1から始まる。",
+    "code": "○手続: walk(整数型: p)\n  if p = 0 then\n    return\n  endif\n  walk(left[p])\n  出力(value[p])\n  walk(right[p])\n\n整数型の配列: value ← {9, 4, 13, 2, 7, 11, 15}\n整数型の配列: left ← {2, 4, 6, 0, 0, 0, 0}\n整数型の配列: right ← {3, 5, 7, 0, 0, 0, 0}\nwalk(1)",
+    "choices": [
+      "7",
+      "11",
+      "13",
+      "9"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "左部分木の最後の出力値。",
+      "根の次に出力される値。",
+      "右部分木の根を先に数えた値。",
+      "出力列2、4、7、9、11、13、15の4番目。"
+    ],
+    "explanation": "左部分木は2、4、7の順に出力される。4番目は根の9であり、その後に右部分木を訪問する。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0117",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "表の大きさ7で線形探査するハッシュ表へ、鍵13を挿入する位置はどれか。空欄は未定義、添字は1から始まる。",
+    "code": "○整数型: insertPos()\n  整数型の配列: table ← {8, 15, 未定義, 10, 11, 未定義, 6}\n  整数型: key ← 13, pos\n  pos ← key mod 7 + 1\n  while table[pos] ≠ 未定義\n    pos ← pos mod 7 + 1\n  endwhile\n  table[pos] ← key\n  return pos",
+    "choices": [
+      "3",
+      "7",
+      "1",
+      "2"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "探査位置7→1→2→3の最後が空いている。",
+      "ハッシュ値の位置だけを返した場合の値。",
+      "最初の衝突後に1へ進んだ時点で止めた値。",
+      "2回目の衝突後に2へ進んだ時点で止めた値。"
+    ],
+    "explanation": "13 mod 7 + 1で初期位置は7となる。7、1、2は使用中なので、次の空き位置3へ挿入する。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0118",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "ハッシュ値が同じ鍵を単方向の連結で管理する。鍵18の探索で比較する節点数はどれか。0は後続なしを表す。",
+    "code": "○整数型: comparisons()\n  整数型の配列: key ← {4, 11, 18, 25, 7}\n  整数型の配列: next ← {2, 3, 4, 0, 0}\n  整数型: p ← 1, count ← 0\n  while p ≠ 0\n    count ← count + 1\n    if key[p] = 18 then\n      return count\n    endif\n    p ← next[p]\n  endwhile\n  return count",
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "18の直前で探索を止めた場合の値。",
+      "3番目の比較で18が見つかる。",
+      "一致後も次の節点を比較した場合の値。",
+      "別の連結列の節点まで数えた値。"
+    ],
+    "explanation": "探索は節点1の4、節点2の11、節点3の18を順に比較する。一致した時点で返すので3回である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0119",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "文字列の素朴な照合で、パターンが見つかるまで何回の文字比較を行うか。文字位置は1から始まる。",
+    "code": "○整数型: matchCount()\n  文字列型: text ← \"AABABA\", pattern ← \"ABA\"\n  整数型: i, j, count ← 0\n  for (i を 1 から 文字数(text) - 文字数(pattern) + 1 まで 1 ずつ増やす)\n    j ← 1\n    while j ≤ 文字数(pattern)\n      count ← count + 1\n      if text[i + j - 1] ≠ pattern[j] then\n        break\n      endif\n      j ← j + 1\n    endwhile\n    if j > 文字数(pattern) then\n      return count\n    endif\n  endfor\n  return count",
+    "choices": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "一致した位置だけの比較回数。",
+      "最初の開始位置での不一致比較を数え忘れた値。",
+      "開始位置1で2回、開始位置2で3回比較する。",
+      "一致後も1文字比較したと数えた値。"
+    ],
+    "explanation": "開始位置1ではA、Aを比較した後、BとAで不一致となり2回比較する。開始位置2ではA、B、Aの3文字が一致し、合計5回である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0120",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "連続する同じ文字を「文字と個数」で表す処理の出力はどれか。文字位置は1から始まる。",
+    "code": "○文字列型: encode()\n  文字列型: s ← \"AAABBCCCA\", out ← \"\"\n  文字列型: current ← s[1]\n  整数型: i, count ← 1\n  for (i を 2 から 文字数(s) まで 1 ずつ増やす)\n    if s[i] = current then\n      count ← count + 1\n    else\n      out ← out + current + 文字列化(count)\n      current ← s[i]\n      count ← 1\n    endif\n  endfor\n  out ← out + current + 文字列化(count)\n  return out",
+    "choices": [
+      "A4B2C3",
+      "A3B2C3",
+      "A3B3C2A1",
+      "A3B2C3A1"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "離れた位置のAも一つの群へまとめた結果。",
+      "最後のAの群を出力し忘れた結果。",
+      "BとCの個数を取り違えた結果。",
+      "各群を順に数えるとA3B2C3A1となる。"
+    ],
+    "explanation": "連続群はAAA、BB、CCC、Aの四つである。最後の群は繰返し後の追記で出力される。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0121",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "ふるいで2から20までの素数を残す。印が真の数の合計はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: primeSum()\n  論理型の配列: prime[1..20]\n  整数型: i, j, total ← 0\n  for (i を 1 から 20 まで 1 ずつ増やす)\n    prime[i] ← true\n  endfor\n  prime[1] ← false\n  for (i を 2 から 4 まで 1 ずつ増やす)\n    if prime[i] then\n      j ← i × i\n      while j ≤ 20\n        prime[j] ← false\n        j ← j + i\n      endwhile\n    endif\n  endfor\n  for (i を 1 から 20 まで 1 ずつ増やす)\n    if prime[i] then total ← total + i endif\n  endfor\n  return total",
+    "choices": [
+      "77",
+      "58",
+      "78",
+      "60"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "2+3+5+7+11+13+17+19=77である。",
+      "19を数え忘れた場合の合計。",
+      "1を素数として加えた場合の合計。",
+      "17を数え忘れた場合の合計。"
+    ],
+    "explanation": "残る素数は2、3、5、7、11、13、17、19である。これらを足すと77となり、1は最初に除外されている。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0122",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "十進数26を3進数の文字列へ変換する関数convert(26)の戻り値はどれか。÷は整数商である。",
+    "code": "○文字列型: convert(整数型: n)\n  文字列型: out ← \"\"\n  整数型: digit\n  while n > 0\n    digit ← n mod 3\n    out ← 文字列化(digit) + out\n    n ← n ÷ 3\n  endwhile\n  return out",
+    "choices": [
+      "122",
+      "222",
+      "220",
+      "2220"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "最上位の桁を1と取り違えた結果。",
+      "余り2、2、2を上位から並べて222である。",
+      "最後の余りを0と取り違えた結果。",
+      "余分な0を末尾に付けた結果。"
+    ],
+    "explanation": "26を3で割ると商8余り2、8は商2余り2、2は商0余り2である。余りを前に付けるので222となる。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0123",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "二つの整数の最大公約数を使い、分数42/56を約分する。reduce()の戻り値はどれか。÷は整数商である。",
+    "code": "○整数型: gcd(整数型: a, 整数型: b)\n  整数型: r\n  while b ≠ 0\n    r ← a mod b\n    a ← b\n    b ← r\n  endwhile\n  return a\n\n○整数型: reduce()\n  整数型: num ← 42, den ← 56, g\n  g ← gcd(num, den)\n  num ← num ÷ g\n  den ← den ÷ g\n  return num × 10 + den",
+    "choices": [
+      "35",
+      "43",
+      "34",
+      "14"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "分母を5と計算し違えた場合の値。",
+      "分子と分母を逆にした場合の符号化値。",
+      "約分後の分子3と分母4から34になる。",
+      "最大公約数をそのまま返した値。"
+    ],
+    "explanation": "42と56の最大公約数は14である。約分後は3/4なので、3×10+4=34を返す。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0124",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "3行3列の表で主対角線の値を足す。diagonal()の戻り値はどれか。行と列の番号は1から始まる。",
+    "code": "○整数型: diagonal()\n  整数型の二次元配列: a ← {{2, 4, 6}, {1, 3, 5}, {7, 8, 9}}\n  整数型: i, total ← 0\n  for (i を 1 から 3 まで 1 ずつ増やす)\n    total ← total + a[i, i]\n  endfor\n  return total",
+    "choices": [
+      "16",
+      "15",
+      "45",
+      "14"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "反対角線6、3、7の和を取り違えた値。",
+      "中央の3を4と誤読した値。",
+      "全要素の合計である。",
+      "2+3+9=14である。"
+    ],
+    "explanation": "参照する要素はa[1,1]=2、a[2,2]=3、a[3,3]=9である。したがって合計は14である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0125",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "2行3列の表を転置したとき、転置後のb[3,2]はどれか。行と列の番号は1から始まる。",
+    "code": "○整数型: transposeLast()\n  整数型の二次元配列: a ← {{4, 7, 2}, {9, 1, 6}}\n  整数型の二次元配列: b[1..3, 1..2]\n  整数型: i, j\n  for (i を 1 から 2 まで 1 ずつ増やす)\n    for (j を 1 から 3 まで 1 ずつ増やす)\n      b[j, i] ← a[i, j]\n    endfor\n  endfor\n  return b[3, 2]",
+    "choices": [
+      "6",
+      "2",
+      "9",
+      "1"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "b[3,2]=a[2,3]=6である。",
+      "b[3,1]に入る値。",
+      "a[2,1]の値。",
+      "b[2,2]に入る値。"
+    ],
+    "explanation": "転置では行番号と列番号を入れ替え、b[j,i]へa[i,j]を代入する。b[3,2]はa[2,3]なので6である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0126",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "店舗別の売上表で、各列の合計のうち最大値を返す。columnMax()の戻り値はどれか。行と列の番号は1から始まる。",
+    "code": "○整数型: columnMax()\n  整数型の二次元配列: sales ← {{3, 8, 4}, {6, 2, 7}, {5, 5, 1}}\n  整数型: col, row, sum, best ← 0\n  for (col を 1 から 3 まで 1 ずつ増やす)\n    sum ← 0\n    for (row を 1 から 3 まで 1 ずつ増やす)\n      sum ← sum + sales[row, col]\n    endfor\n    if sum > best then best ← sum endif\n  endfor\n  return best",
+    "choices": [
+      "14",
+      "15",
+      "12",
+      "8"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "1列目の合計で止めた値。",
+      "最大の列合計は2列目の8+2+5=15である。",
+      "3列目だけの合計。",
+      "列合計ではなく最大の単一要素を返した値。"
+    ],
+    "explanation": "列合計は1列目14、2列目15、3列目12である。bestは14から15へ更新され、15を返す。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0127",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "右または下へ進む経路数を表に記録する。中央のマスを通れない場合、右下への経路数はどれか。行と列の番号は1から始まる。",
+    "code": "○整数型: routes()\n  整数型の二次元配列: ways[1..3, 1..4]\n  整数型: row, col, above, left\n  for (row を 1 から 3 まで 1 ずつ増やす)\n    for (col を 1 から 4 まで 1 ずつ増やす)\n      if row = 1 and col = 1 then\n        ways[row, col] ← 1\n      elseif row = 2 and col = 2 then\n        ways[row, col] ← 0\n      else\n        above ← 0\n        left ← 0\n        if row > 1 then above ← ways[row - 1, col] endif\n        if col > 1 then left ← ways[row, col - 1] endif\n        ways[row, col] ← above + left\n      endif\n    endfor\n  endfor\n  return ways[3, 4]",
+    "choices": [
+      "5",
+      "10",
+      "4",
+      "3"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "通れないマスの寄与を一つ残した値。",
+      "障害のない3行4列の経路数。",
+      "最終行の経路数は1、1、2、4となる。",
+      "最終行への流入を一つ数え忘れた値。"
+    ],
+    "explanation": "2行2列を0として、2行目は1、0、1、2となる。3行目は1、1、2、4となるため、右下は4である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0128",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "昇順の二列を併合し、同じ値は一つだけ出力する。結果の要素数はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: uniqueMerge()\n  整数型の配列: a ← {1, 4, 4, 9}\n  整数型の配列: b ← {2, 4, 8, 9}\n  整数型の配列: out[1..8]\n  整数型: i ← 1, j ← 1, count ← 0, nextValue\n  while i ≤ 4 or j ≤ 4\n    if j > 4 or (i ≤ 4 and a[i] ≤ b[j]) then\n      nextValue ← a[i]\n      i ← i + 1\n    else\n      nextValue ← b[j]\n      j ← j + 1\n    endif\n    if count = 0 or out[count] ≠ nextValue then\n      count ← count + 1\n      out[count] ← nextValue\n    endif\n  endwhile\n  return count",
+    "choices": [
+      "4",
+      "6",
+      "8",
+      "5"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "8または9を一つ数え忘れた値。",
+      "a内で重複する4を残した値。",
+      "重複を除かず入力の件数を足した値。",
+      "重複除去後の値は1、2、4、8、9である。"
+    ],
+    "explanation": "併合順は1、2、4、4、4、8、9、9である。隣接する重複を除くと1、2、4、8、9の5個になる。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0129",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "商品コード順に並ぶ販売記録を集計する。最大のグループ合計はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: groupMax()\n  整数型の配列: code ← {1, 1, 2, 2, 2, 3}\n  整数型の配列: qty ← {2, 5, 3, 1, 4, 6}\n  整数型: i, subtotal ← 0, best ← 0\n  for (i を 1 から 6 まで 1 ずつ増やす)\n    if i > 1 and code[i] ≠ code[i - 1] then\n      if subtotal > best then best ← subtotal endif\n      subtotal ← 0\n    endif\n    subtotal ← subtotal + qty[i]\n  endfor\n  if subtotal > best then best ← subtotal endif\n  return best",
+    "choices": [
+      "8",
+      "7",
+      "6",
+      "15"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "コード2の3+1+4=8が最大である。",
+      "コード1の合計である。",
+      "最終グループだけの合計である。",
+      "コード1と2をまとめた値。"
+    ],
+    "explanation": "コード1の合計は7、コード2は8、コード3は6である。グループ切替時と最後にbestを更新するので8を返す。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0130",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "硬貨1、3、4を使い、金額6を作る最少枚数を求める。minCoins()の戻り値はどれか。coinの要素番号は1から始まる。dp[1]を金額0の値に対応させる。",
+    "code": "○整数型: minCoins()\n  整数型の配列: coin ← {1, 3, 4}\n  整数型の配列: dp[1..7]\n  整数型: amount, j, candidate\n  dp[1] ← 0\n  for (amount を 1 から 6 まで 1 ずつ増やす)\n    dp[amount + 1] ← 99\n    for (j を 1 から 3 まで 1 ずつ増やす)\n      if coin[j] ≤ amount then\n        candidate ← dp[amount - coin[j] + 1] + 1\n        if candidate < dp[amount + 1] then\n          dp[amount + 1] ← candidate\n        endif\n      endif\n    endfor\n  endfor\n  return dp[7]",
+    "choices": [
+      "3",
+      "2",
+      "1",
+      "6"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "4+1+1の候補を選んだ値。",
+      "3+3の2枚で6を作れる。",
+      "額面6の硬貨があると誤認した値。",
+      "額面1だけを使った値。"
+    ],
+    "explanation": "dp[3]=1なので、6では3の硬貨を使う候補がdp[3]+1=2となる。ほかの組合せより少なく、最少枚数は2である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0131",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "隣り合う二つの記録の差を足す。totalChange()の戻り値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: totalChange()\n  整数型の配列: a ← {3, 5, 4, 9}\n  整数型: i, total ← 0\n  for (i を 2 から 4 まで 1 ずつ増やす)\n    total ← total + (a[i] - a[i - 1])\n  endfor\n  return total",
+    "choices": [
+      "9",
+      "7",
+      "6",
+      "2"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "最後の値を差ではなくそのまま返した値。",
+      "増加した部分だけを足した値。",
+      "2-1+5=6である。",
+      "最初の差だけを数えた値。"
+    ],
+    "explanation": "差は2、-1、5の順であり、合計は6となる。途中の減少も符号付きで加える。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0132",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "二つの変数が同じ箱オブジェクトを参照する。display()の戻り値はどれか。",
+    "code": "○クラス Box\n  整数型: value\n  ○手続: add(整数型: n)\n    value ← value + n\n  ○整数型: read()\n    return value\n\n○整数型: display()\n  Box型: a ← 新しいBox(), b\n  a.value ← 4\n  b ← a\n  b.add(3)\n  return a.read()",
+    "choices": [
+      "4",
+      "3",
+      "8",
+      "7"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "bへの代入で箱を複製したと考えた値。",
+      "初期値を無視して加算分だけ返した値。",
+      "加算を2回行ったと考えた値。",
+      "aとbは同じ箱を参照し、値は7になる。"
+    ],
+    "explanation": "bへaを代入しても新しい箱は作られず、両者は同じオブジェクトを指す。b.add(3)でvalueは4から7になり、a.read()も7を返す。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0133",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "会員オブジェクトの加点処理を実行する。score()の戻り値はどれか。",
+    "code": "○クラス Member\n  整数型: point\n  ○手続: add(整数型: n)\n    if n > 0 then\n      point ← point + n\n    endif\n  ○整数型: read()\n    return point\n\n○整数型: score()\n  Member型: x ← 新しいMember()\n  x.point ← 5\n  x.add(4)\n  x.add(-2)\n  return x.read()",
+    "choices": [
+      "9",
+      "7",
+      "5",
+      "11"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "有効な加点は4だけなので5+4=9である。",
+      "負の加点も適用した場合の値。",
+      "addの効果を全て無視した値。",
+      "負の加点を絶対値にして足した値。"
+    ],
+    "explanation": "4は正なのでpointは5から9に増える。-2は条件n>0を満たさず、値は9のままである。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0134",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "オブジェクトの実際の型に応じて同名メソッドを呼び分ける。total()の戻り値はどれか。",
+    "code": "○クラス Base\n  整数型: value\n  ○整数型: calc()\n    return value + 1\n\n○クラス Double は Base を継承する\n  ○整数型: calc()\n    return value × 2\n\n○整数型: total()\n  Base型: a ← 新しいBase(), b ← 新しいDouble()\n  a.value ← 4\n  b.value ← 4\n  return a.calc() + b.calc()",
+    "choices": [
+      "10",
+      "13",
+      "16",
+      "9"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "両方にBaseのcalcを使った値。",
+      "5+8=13である。",
+      "両方にDoubleのcalcを使った値。",
+      "aの結果5にb.valueの4をそのまま足した値。"
+    ],
+    "explanation": "a.calc()はBaseの処理で5を返す。bの実際の型はDoubleなのでb.calc()は8を返し、合計は13である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0135",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "昇順配列で値5より大きい最初の位置を返したい。空欄ａに入れる条件はどれか。配列の要素番号は1から始まり、÷は整数商である。",
+    "code": "○整数型: firstGreater()\n  整数型の配列: a ← {1, 3, 5, 5, 7, 9}\n  整数型: left ← 1, right ← 6, mid, result ← 7\n  while left ≤ right\n    mid ← (left + right) ÷ 2\n    if □ａ then\n      result ← mid\n      right ← mid - 1\n    else\n      left ← mid + 1\n    endif\n  endwhile\n  return result",
+    "choices": [
+      "a[mid] ≥ 5",
+      "a[mid] < 5",
+      "a[mid] > 5",
+      "a[mid] = 5"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "最初の5である位置3を返してしまう。",
+      "5より小さい値の位置を記録してしまう。",
+      "a[5]=7が最初に5を超える要素となる。",
+      "同値の5を探す条件になり、7の位置を返さない。"
+    ],
+    "explanation": "5を超える要素は位置5から始まる。条件が真のとき候補を記録して左側をさらに探すため、条件はa[mid]>5である。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0136",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "挿入整列で同じ値の相対順序も保ちたい。空欄ａに入れる条件はどれか。要素の大小比較はkeyで行う。",
+    "code": "○手続: stableInsert(項目型の配列: a)\n  整数型: i, j\n  項目型: current\n  for (i を 2 から 要素数(a) まで 1 ずつ増やす)\n    current ← a[i]\n    j ← i - 1\n    while j ≥ 1 and □ａ\n      a[j + 1] ← a[j]\n      j ← j - 1\n    endwhile\n    a[j + 1] ← current\n  endfor",
+    "choices": [
+      "a[j].key ≥ current.key",
+      "a[j].key < current.key",
+      "a[j].key = current.key",
+      "a[j].key > current.key"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "同じkeyの先行項目も後ろへ動かし、順序を逆転させる。",
+      "小さい項目を右へ動かし、昇順にならない。",
+      "同値だけを移動し、異なる値が整列されない。",
+      "大きいkeyだけをずらす比較である。"
+    ],
+    "explanation": "大きいkeyだけを右へ移せば昇順になる。同じkeyは移動しないので元の相対順序が保たれる。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0137",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "長さ4の循環キューで取り出し後のhead更新に誤りがある。どの変更で境界を正しく循環させられるか。添字は1から始まる。",
+    "code": "○整数型: dequeue()\n  整数型の配列: q ← {6, 7, 8, 9}\n  整数型: head ← 4, value\n  value ← q[head]\n  head ← head + 1\n  return q[head]",
+    "choices": [
+      "head ← head mod 4 + 1",
+      "head ← head + 1",
+      "head ← head mod 4",
+      "head ← (head + 1) mod 4 + 1"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "4 mod 4 + 1=1となる。",
+      "位置5が配列範囲外になる元の誤り。",
+      "位置4から0へ進み、添字0が範囲外になる。",
+      "位置4から2へ進み、位置1を飛ばす。"
+    ],
+    "explanation": "循環キューの位置は4の次に1へ戻す必要がある。head mod 4 + 1なら、head=4から1になりq[1]を読める。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0138",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "文字列の末尾にある連続文字を数える処理で、最後の群が記録されない。どの変更で修正できるか。文字位置は1から始まる。",
+    "code": "○整数型: longestRun()\n  文字列型: s ← \"AABCCC\"\n  文字列型: current ← s[1]\n  整数型: i, run ← 1, best ← 0\n  for (i を 2 から 文字数(s) まで 1 ずつ増やす)\n    if s[i] = current then\n      run ← run + 1\n    else\n      if run > best then best ← run endif\n      current ← s[i]\n      run ← 1\n    endif\n  endfor\n  return best",
+    "choices": [
+      "run ← 0 で初期化する",
+      "return best の直前に if run > best then best ← run endif を追加する",
+      "if s[i] = current then を if s[i] ≠ current then に変える",
+      "for の開始位置を3に変える"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "最初の群の長さを過少に数える。",
+      "末尾の群を繰返し後に反映する追加が必要である。",
+      "群の継続と切替を逆に判定する。",
+      "2文字目を処理できなくなる。"
+    ],
+    "explanation": "群の長さは文字が変わるときにbestへ反映される。末尾の群には切替がないため、繰返し後にもrunとbestを比較する。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0139",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "B",
+    "question": "内側の加算行は合計何回実行されるか。",
+    "code": "○整数型: triangleCount()\n  整数型: i, j, count ← 0\n  for (i を 1 から 4 まで 1 ずつ増やす)\n    for (j を 1 から i まで 1 ずつ増やす)\n      count ← count + 1\n    endfor\n  endfor\n  return count",
+    "choices": [
+      "4",
+      "8",
+      "10",
+      "16"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "外側の繰返し回数だけを数えた値。",
+      "各外側で2回ずつ実行すると考えた値。",
+      "1+2+3+4=10回である。",
+      "毎回内側が4回実行されると考えた値。"
+    ],
+    "explanation": "内側の実行回数はi=1、2、3、4でそれぞれ1、2、3、4回である。合計は10回になる。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0140",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "2次元累積和を作る。空欄ａに入れる式はどれか。行列の要素番号は1から始まり、0行・0列の累積和は0とする。",
+    "code": "○整数型: areaSum()\n  整数型の二次元配列: a ← {{2, 1}, {3, 4}}\n  整数型の二次元配列: sum[0..2, 0..2]\n  整数型: row, col\n  for (row を 0 から 2 まで 1 ずつ増やす)\n    sum[row, 0] ← 0\n  endfor\n  for (col を 0 から 2 まで 1 ずつ増やす)\n    sum[0, col] ← 0\n  endfor\n  for (row を 1 から 2 まで 1 ずつ増やす)\n    for (col を 1 から 2 まで 1 ずつ増やす)\n      sum[row, col] ← □ａ\n    endfor\n  endfor\n  return sum[2, 2]",
+    "choices": [
+      "a[row, col] + sum[row - 1, col] + sum[row, col - 1]",
+      "a[row, col] + sum[row - 1, col] - sum[row, col - 1]",
+      "a[row, col] + sum[row - 1, col - 1]",
+      "a[row, col] + sum[row - 1, col] + sum[row, col - 1] - sum[row - 1, col - 1]"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "左上の重複部分を二重加算する。",
+      "左側の領域を減算してしまう。",
+      "上側と左側の帯を加算できない。",
+      "上、左を足し、重なる左上を一度引く。"
+    ],
+    "explanation": "上側の長方形と左側の長方形を足すと、左上が二重になる。左上を一度引き、現在の要素を足すとsum[2,2]=10となる。",
+    "status": "verified",
+    "origin": "original"
+  }
+]
