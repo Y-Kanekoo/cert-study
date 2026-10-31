@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { leafIds, topicMap, validateQuestionLinks } from '../src/shared/content';
 import { exams, loadExam, readJson } from './content';
 import { detectDuplicates } from './duplicates';
+import { detectAnswerClues } from './quality';
 
 async function main(): Promise<void> {
   const schema = await readJson<Record<string, unknown>>(join('content', 'schema', 'question.schema.json'));
@@ -28,6 +29,9 @@ async function main(): Promise<void> {
       errors++;
     }
     for (const message of duplicates.warnings) console.warn(message);
+    const qualityWarnings = detectAnswerClues(questions);
+    for (const message of qualityWarnings) console.warn(message);
+    console.log(`${exam}: 正答の手掛かりの警告 ${qualityWarnings.length}件`);
     const verified = questions.filter((q) => q.status === 'verified');
     const map = topicMap(syllabus);
     const answerCounts = [0, 0, 0, 0];
