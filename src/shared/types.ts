@@ -1,0 +1,98 @@
+export type ExamId = 'fe' | 'ap' | 'jstqb';
+export type Mode = 'practice' | 'review' | 'retention' | 'mock';
+export type Question = {
+  id: string;
+  exam: ExamId;
+  topic: string;
+  type: 'mcq' | 'self';
+  difficulty: 1 | 2 | 3;
+  section: 'A' | 'B';
+  k?: number;
+  question: string;
+  code?: string;
+  choices?: string[];
+  answer?: number;
+  choiceNotes?: string[];
+  modelAnswer?: string;
+  rubric?: string[];
+  explanation: string;
+  keywords?: string[];
+  status: 'verified' | 'draft' | 'flagged';
+  origin: 'original';
+  reviewNote?: string;
+};
+export type SyllabusNode = {
+  id: string;
+  title: string;
+  k?: number;
+  field?: string;
+  children?: SyllabusNode[];
+};
+export type Syllabus = {
+  exam: ExamId;
+  title: string;
+  source: { name: string; version: string; url: string; publisher: string };
+  tree: SyllabusNode[];
+};
+export type MockConfig = {
+  id: string;
+  name: string;
+  section: 'A' | 'B';
+  questionCount: number;
+  minutes: number;
+  passRatio: number;
+  selfGraded?: boolean;
+  distribution?: { prefix: string; weight?: number; count?: number }[];
+};
+export type ExamConfig = {
+  exam: ExamId;
+  name: string;
+  shortName: string;
+  appTitle: string;
+  themeColor: string;
+  mockExams: MockConfig[];
+  notes: string[];
+};
+export type Attempt = {
+  id?: number;
+  questionId: string;
+  mode: Mode;
+  correct: boolean;
+  choice?: number | null;
+  selfScore?: number | null;
+  lowConfidence?: boolean;
+  gapDays?: number | null;
+  elapsedMs: number;
+  createdAt: string;
+};
+export type SrsState = {
+  questionId: string;
+  ease: number;
+  intervalDays: number;
+  repetitions: number;
+  dueAt: string;
+  lapses: number;
+  lastResult: boolean;
+  lastSeenAt: string;
+  firstCorrectAt: string | null;
+};
+export type Session = {
+  id?: number;
+  kind: 'practice' | 'mock';
+  mockId?: string | null;
+  startedAt: string;
+  finishedAt: string;
+  total: number;
+  correct: number;
+  scoreRatio: number;
+  passed?: boolean | null;
+  detail: Record<string, unknown>;
+};
+export type RetentionCheck = { questionId: string; gapDays: number; correct: boolean; createdAt: string };
+export type Progress = {
+  attempts: Attempt[];
+  srs: SrsState[];
+  sessions: Session[];
+  retentionChecks: RetentionCheck[];
+};
+export const emptyProgress = (): Progress => ({ attempts: [], srs: [], sessions: [], retentionChecks: [] });

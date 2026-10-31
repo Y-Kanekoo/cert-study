@@ -1,0 +1,59 @@
+name = "cert-study"
+main = "dist/fe/worker.js"
+no_bundle = true
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cert-study"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
+migrations_dir = "migrations"
+
+[vars]
+TOKEN_SHA256 = ""
+
+[env.fe]
+name = "fe-study"
+main = "dist/fe/worker.js"
+no_bundle = true
+workers_dev = true
+
+[[env.fe.d1_databases]]
+binding = "DB"
+database_name = "cert-study"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
+migrations_dir = "migrations"
+
+[env.fe.vars]
+TOKEN_SHA256 = ""
+
+[env.ap]
+name = "ap-study"
+main = "dist/ap/worker.js"
+no_bundle = true
+workers_dev = true
+
+[[env.ap.d1_databases]]
+binding = "DB"
+database_name = "cert-study"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
+migrations_dir = "migrations"
+
+[env.ap.vars]
+TOKEN_SHA256 = ""
+
+[env.jstqb]
+name = "jstqb-study"
+main = "dist/jstqb/worker.js"
+no_bundle = true
+workers_dev = true
+
+[[env.jstqb.d1_databases]]
+binding = "DB"
+database_name = "cert-study"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
+migrations_dir = "migrations"
+
+[env.jstqb.vars]
+TOKEN_SHA256 = ""

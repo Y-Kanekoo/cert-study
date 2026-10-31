@@ -1,0 +1,31 @@
+[
+  {
+    "id": "ap-test-001",
+    "exam": "ap",
+    "topic": "ap-M09-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "索引を使いやすい検索条件はどれか。",
+    "choices": ["列に関数を適用", "前方一致", "先頭ワイルドカード", "全件走査"],
+    "answer": 1,
+    "choiceNotes": ["索引が使いにくい", "範囲を絞れる", "先頭から探索できない", "索引を使わない"],
+    "explanation": "前方一致は索引の順序を利用できます。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "ap-test-002",
+    "exam": "ap",
+    "topic": "ap-M11-01",
+    "type": "self",
+    "difficulty": 3,
+    "section": "B",
+    "question": "ログの改ざんを検知する方法を短く説明してください。",
+    "modelAnswer": "ログのハッシュを別の信頼できる場所に保管し、後で再計算した値と照合する。",
+    "rubric": ["ハッシュを計算する", "信頼できる別の場所に保存する", "照合する"],
+    "explanation": "独立して保管したハッシュ値と比較すれば変更を検出できます。",
+    "status": "verified",
+    "origin": "original"
+  }
+]
