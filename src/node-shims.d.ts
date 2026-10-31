@@ -21,6 +21,20 @@ declare module 'node:sqlite' {
     };
   }
 }
+declare module 'node:http' {
+  type IncomingMessage = AsyncIterable<Uint8Array> & {
+    url?: string;
+    method?: string;
+    headers: Record<string, string | string[] | undefined>;
+  };
+  type ServerResponse = {
+    writeHead(status: number, headers: Record<string, string>): void;
+    end(body: Uint8Array | string): void;
+  };
+  export function createServer(handler: (incoming: IncomingMessage, outgoing: ServerResponse) => void): {
+    listen(port: number, hostname: string): void;
+  };
+}
 declare const process: {
   argv: string[];
   env: Record<string, string | undefined>;
