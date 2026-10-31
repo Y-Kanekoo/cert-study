@@ -12,6 +12,7 @@ const uniqueQuestions = Array.from({ length: 2000 }, (_, index) => ({
   ...questions[index % questions.length],
   id: `fe-batch-${index}`,
 }));
+const D1_MAX_BOUND_PARAMS = 100;
 let handle: (
   request: Request,
   env: { DB: D1Database; TOKEN_SHA256: string; EXAM?: string },
@@ -26,6 +27,7 @@ function fakeD1(): { db: D1Database; count: () => number; reset: () => void } {
     sql,
     params,
     bind(...values: unknown[]) {
+      if (values.length > D1_MAX_BOUND_PARAMS) throw new Error('too many SQL variables');
       return statement(sql, values);
     },
     first<T>(): T | null {
@@ -106,6 +108,11 @@ beforeAll(async () => {
 });
 
 describe('D1 バッチ書き込み', () => {
+  it('100 個を超えるバインド変数を拒否する', () => {
+    const fake = fakeD1();
+    expect(() => fake.db.prepare('SELECT 1').bind(...Array(101).fill(1))).toThrow('too many SQL variables');
+  });
+
   it('認証未設定のエラーを日本語で返す', async () => {
     const fake = fakeD1();
     const response = await handle(new Request('https://study.example/api/progress'), {
@@ -150,6 +157,52 @@ describe('D1 バッチ書き込み', () => {
       expect(actual?.repetitions).toBe(expected?.repetitions);
       expect(actual?.lapses).toBe(expected?.lapses);
     }
+  });
+
+  it('60 問の模擬試験の解答とセッションを保存する', async () => {
+    const fake = fakeD1();
+    const attempts = uniqueQuestions.slice(0, 60).map((question, index) => ({
+      ...attempt(index),
+      questionId: question.id,
+    }));
+    expect((await call(fake.db, '/api/attempts', 'POST', attempts)).status).toBe(200);
+    const session: Session = {
+      kind: 'mock',
+      mockId: 'fe-A-mini',
+      startedAt: attempts[0].createdAt,
+      finishedAt: attempts.at(-1)!.createdAt,
+      total: attempts.length,
+      correct: attempts.filter((item) => item.correct).length,
+      scoreRatio: attempts.filter((item) => item.correct).length / attempts.length,
+      detail: {},
+    };
+    expect((await call(fake.db, '/api/sessions', 'POST', session)).status).toBe(200);
+    const progress = (await (await call(fake.db, '/api/progress', 'GET')).json()) as {
+      attempts: Attempt[];
+      srs: unknown[];
+      sessions: Session[];
+    };
+    expect(progress.attempts).toHaveLength(60);
+    expect(progress.srs).toHaveLength(60);
+    expect(progress.sessions).toHaveLength(1);
+  });
+
+  it('1000 解答の取り込みが D1 の変数上限内で成功する', async () => {
+    const fake = fakeD1();
+    const attempts = uniqueQuestions.slice(0, 1000).map((question, index) => ({
+      ...attempt(index, 'retention'),
+      questionId: question.id,
+    }));
+    const response = await call(fake.db, '/api/import', 'POST', { attempts, sessions: [] });
+    expect(response.status).toBe(200);
+    const progress = (await (await call(fake.db, '/api/progress', 'GET')).json()) as {
+      attempts: Attempt[];
+      srs: unknown[];
+      retentionChecks: unknown[];
+    };
+    expect(progress.attempts).toHaveLength(1000);
+    expect(progress.srs).toHaveLength(1000);
+    expect(progress.retentionChecks).toHaveLength(1000);
   });
 
   it('2000 解答とセッションを 5 回以内で取り込む', async () => {

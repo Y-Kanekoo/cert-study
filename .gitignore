@@ -5,4 +5,6 @@ dist/
 .dev.vars
 *.log
 coverage/
+e2e-results/
+playwright-report/
 .DS_Store

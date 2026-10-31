@@ -7,10 +7,12 @@
     "validate": "node --import tsx scripts/validate-content.ts",
     "stats": "node --import tsx scripts/stats.ts",
     "build": "node --import tsx scripts/build.ts",
-    "test": "vitest run",
+    "e2e": "npm run build && playwright test",
+    "e2e:prod": "E2E_TARGET=prod playwright test",
+    "test": "vitest run test",
     "lint": "eslint . && tsc --noEmit && npm run format:check",
-    "format": "prettier --write src scripts test",
-    "format:check": "prettier --check src scripts test",
+    "format": "prettier --write src scripts test e2e playwright.config.ts",
+    "format:check": "prettier --check src scripts test e2e playwright.config.ts",
     "check": "npm run validate && npm run lint && npm test && npm run build",
     "review:blind": "node --import tsx scripts/blind-export.ts",
     "review:compare": "node --import tsx scripts/blind-export.ts"
@@ -18,6 +20,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261031.1",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "esbuild": "^0.28.2",

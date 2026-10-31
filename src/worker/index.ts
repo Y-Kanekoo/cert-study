@@ -20,6 +20,7 @@ declare const __SOURCES__: string;
 declare const __CONTENT__: { exam: ExamConfig; syllabus: Syllabus; questions: Question[] };
 
 type Env = { DB: D1Database; TOKEN_SHA256: string; EXAM?: string };
+const D1_MAX_BOUND_PARAMS = 100;
 const content = __CONTENT__;
 const questions = new Map(content.questions.map((q) => [q.id, q]));
 const securityHeaders = {
@@ -150,6 +151,7 @@ function sessionStatement(db: D1Database, session: Session): D1PreparedStatement
     );
 }
 async function writeBatches(db: D1Database, statements: D1PreparedStatement[]): Promise<void> {
+  // D1 の変数上限は各文に適用される。バッチ内の文数に固定上限はないため、送信量を 1000 文単位に分ける。
   for (let index = 0; index < statements.length; index += 1000) {
     await db.batch(statements.slice(index, index + 1000));
   }
@@ -161,8 +163,9 @@ function insertRows(
   rows: (string | number | null)[][],
 ): D1PreparedStatement[] {
   const statements: D1PreparedStatement[] = [];
-  for (let index = 0; index < rows.length; index += 100) {
-    const chunk = rows.slice(index, index + 100);
+  const chunkSize = Math.floor(D1_MAX_BOUND_PARAMS / columns.length);
+  for (let index = 0; index < rows.length; index += chunkSize) {
+    const chunk = rows.slice(index, index + chunkSize);
     const values = chunk.map(() => `(${columns.map(() => '?').join(',')})`).join(',');
     statements.push(
       db.prepare(`INSERT INTO ${table}(${columns.join(',')}) VALUES${values}`).bind(...chunk.flat()),

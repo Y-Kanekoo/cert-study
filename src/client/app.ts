@@ -52,6 +52,7 @@ let mode: 'local' | 'server' = 'local';
 let banner = '';
 let run: Run | null = null;
 let tick: ReturnType<typeof setInterval> | null = null;
+let progressRevision = 0;
 const esc = (value: unknown): string =>
   String(value ?? '').replace(
     /[&<>"']/g,
@@ -132,22 +133,11 @@ async function connect(): Promise<void> {
         : 'サーバーに接続できないため、ローカルモードで保存しています。トークンを確認してください。';
   }
 }
-async function persistAttempts(attempts: Attempt[]): Promise<void> {
-  if (mode === 'server') {
-    try {
-      await api('/api/attempts', 'POST', attempts);
-      progress = await api<Progress>('/api/progress');
-      return;
-    } catch {
-      mode = 'local';
-      progress = localProgress();
-      banner = '保存に失敗したため、以降の履歴はこの端末に保存します。';
-    }
-  }
+function applyAttempts(target: Progress, attempts: Attempt[]): void {
   for (const attempt of attempts) {
-    progress.attempts.push(attempt);
-    const index = progress.srs.findIndex((state) => state.questionId === attempt.questionId);
-    const previous = index < 0 ? undefined : progress.srs[index];
+    target.attempts.push(attempt);
+    const index = target.srs.findIndex((state) => state.questionId === attempt.questionId);
+    const previous = index < 0 ? undefined : target.srs[index];
     const quality = !attempt.correct
       ? 1
       : attempt.lowConfidence || attempt.selfScore === 1
@@ -156,35 +146,63 @@ async function persistAttempts(attempts: Attempt[]): Promise<void> {
           ? 5
           : 4;
     const state = updateSrs(previous, attempt.questionId, quality, attempt.createdAt);
-    if (index < 0) progress.srs.push(state);
-    else progress.srs[index] = state;
+    if (index < 0) target.srs.push(state);
+    else target.srs[index] = state;
     if (attempt.mode === 'retention')
-      progress.retentionChecks.push({
+      target.retentionChecks.push({
         questionId: attempt.questionId,
         gapDays: attempt.gapDays ?? 7,
         correct: attempt.correct,
         createdAt: attempt.createdAt,
       });
   }
+}
+function refreshIfIdle(): void {
+  if (!run) render();
+}
+function switchToLocal(): void {
+  mode = 'local';
+  progress = localProgress();
+  banner = '保存に失敗したため、今回の履歴と以降の履歴をこの端末に保存します。';
+}
+async function persistAttempts(attempts: Attempt[]): Promise<void> {
+  if (mode === 'server') {
+    applyAttempts(progress, attempts);
+    const revision = ++progressRevision;
+    try {
+      await api('/api/attempts', 'POST', attempts);
+      const serverProgress = await api<Progress>('/api/progress');
+      if (revision === progressRevision && mode === 'server') progress = serverProgress;
+      refreshIfIdle();
+      return;
+    } catch {
+      switchToLocal();
+    }
+  }
+  applyAttempts(progress, attempts);
   saveLocal();
+  refreshIfIdle();
 }
 async function persistAttempt(attempt: Attempt): Promise<void> {
   await persistAttempts([attempt]);
 }
 async function persistSession(session: Session): Promise<void> {
   if (mode === 'server') {
+    progress.sessions.push(session);
+    const revision = ++progressRevision;
     try {
       await api('/api/sessions', 'POST', session);
-      progress = await api<Progress>('/api/progress');
+      const serverProgress = await api<Progress>('/api/progress');
+      if (revision === progressRevision && mode === 'server') progress = serverProgress;
+      refreshIfIdle();
       return;
     } catch {
-      mode = 'local';
-      progress = localProgress();
-      banner = '保存に失敗したため、以降の履歴はこの端末に保存します。';
+      switchToLocal();
     }
   }
   progress.sessions.push(session);
   saveLocal();
+  refreshIfIdle();
 }
 function navigate(target: string): void {
   location.hash = target;
@@ -519,10 +537,14 @@ async function answerImmediate(q: Question, answer: Answer): Promise<void> {
   await saveImmediate(q);
 }
 async function saveImmediate(q: Question): Promise<void> {
-  const answer = run!.answers[q.id];
+  const current = run;
+  if (!current) return;
+  const answer = current.answers[q.id];
   await persistAttempt(makeAttempt(q, answer));
-  if (q.type === 'self') run!.feedback = answer.selfScore === 0 ? '不正解' : '正解';
-  renderRun();
+  if (run === current) {
+    if (q.type === 'self') current.feedback = answer.selfScore === 0 ? '不正解' : '正解';
+    renderRun();
+  }
 }
 function makeAttempt(q: Question, answer: Answer | undefined): Attempt {
   const correct = isCorrect(q, answer);
@@ -540,38 +562,45 @@ function makeAttempt(q: Question, answer: Answer | undefined): Attempt {
 }
 async function submitRun(): Promise<void> {
   if (!run || run.stage !== 'answering') return;
+  const current = run;
   if (tick) {
     clearInterval(tick);
     tick = null;
   }
-  if (run.mode === 'mock' || run.mode === 'retention') {
-    const self = run.questions.filter((q) => q.type === 'self' && run!.answers[q.id]?.selfText);
+  if (current.mode === 'mock' || current.mode === 'retention') {
+    const self = current.questions.filter((q) => q.type === 'self' && current.answers[q.id]?.selfText);
     if (self.length) {
-      run.stage = 'grading';
-      run.gradingIndex = 0;
+      current.stage = 'grading';
+      current.gradingIndex = 0;
       renderRun();
       return;
     }
-    await persistAttempts(run.questions.map((q) => makeAttempt(q, run!.answers[q.id])));
+    await persistAttempts(current.questions.map((q) => makeAttempt(q, current.answers[q.id])));
   }
-  const correct = run.questions.filter((q) => {
-    const a = run!.answers[q.id];
+  const correct = current.questions.filter((q) => {
+    const a = current.answers[q.id];
     return isCorrect(q, a);
   }).length;
   const session: Session = {
-    kind: run.mode === 'mock' ? 'mock' : 'practice',
-    mockId: run.mockId ?? null,
-    startedAt: run.startedAt,
+    kind: current.mode === 'mock' ? 'mock' : 'practice',
+    mockId: current.mockId ?? null,
+    startedAt: current.startedAt,
     finishedAt: now(),
-    total: run.questions.length,
+    total: current.questions.length,
     correct,
-    scoreRatio: correct / run.questions.length,
-    passed: run.mode === 'mock' ? correct / run.questions.length >= (run.passRatio ?? 0.6) : null,
-    detail: { mode: run.mode, questionIds: run.questions.map((q) => q.id), flaggedIds: [...run.flags] },
+    scoreRatio: correct / current.questions.length,
+    passed: current.mode === 'mock' ? correct / current.questions.length >= (current.passRatio ?? 0.6) : null,
+    detail: {
+      mode: current.mode,
+      questionIds: current.questions.map((q) => q.id),
+      flaggedIds: [...current.flags],
+    },
   };
   await persistSession(session);
-  run.stage = 'result';
-  renderRun();
+  if (run === current) {
+    current.stage = 'result';
+    renderRun();
+  }
 }
 function renderGrading(): void {
   const self = run!.questions.filter((q) => q.type === 'self' && run!.answers[q.id]?.selfText);
@@ -592,12 +621,12 @@ function renderGrading(): void {
   );
 }
 async function finishGrading(): Promise<void> {
-  await persistAttempts(run!.questions.map((q) => makeAttempt(q, run!.answers[q.id])));
-  run!.stage = 'answering';
-  await submitRunAfterGrading();
-}
-async function submitRunAfterGrading(): Promise<void> {
   const current = run!;
+  await persistAttempts(current.questions.map((q) => makeAttempt(q, current.answers[q.id])));
+  current.stage = 'answering';
+  await submitRunAfterGrading(current);
+}
+async function submitRunAfterGrading(current: Run): Promise<void> {
   const correct = current.questions.filter((q) => {
     const a = current.answers[q.id];
     return isCorrect(q, a);
@@ -617,8 +646,10 @@ async function submitRunAfterGrading(): Promise<void> {
       flaggedIds: [...current.flags],
     },
   });
-  current.stage = 'result';
-  renderRun();
+  if (run === current) {
+    current.stage = 'result';
+    renderRun();
+  }
 }
 function renderResult(): void {
   const current = run!;
@@ -770,7 +801,7 @@ async function init(): Promise<void> {
     const pendingToken = location.hash.startsWith('#token=')
       ? decodeURIComponent(location.hash.slice(7))
       : null;
-    if (pendingToken !== null) history.replaceState(null, '', `${location.pathname}${location.search}#home`);
+    if (pendingToken !== null) history.replaceState(null, '', `${location.pathname}${location.search}`);
     content = await api<Content>('/api/content');
     if (pendingToken !== null) localStorage.setItem(tokenKey(), pendingToken);
     await connect();

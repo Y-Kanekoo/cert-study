@@ -9,10 +9,12 @@ const syllabus = read<Syllabus>('content/fe/syllabus.json');
 const questions = read<Question[]>('test/fixtures/fe.json');
 const database = new DatabaseSync(':memory:');
 database.exec(readFileSync('migrations/0001_init.sql', 'utf8'));
+const D1_MAX_BOUND_PARAMS = 100;
 const adapter = {
   prepare(sql: string) {
     return {
       bind(...params: unknown[]) {
+        if (params.length > D1_MAX_BOUND_PARAMS) throw new Error('too many SQL variables');
         return {
           first<T>(): T | null {
             return (database.prepare(sql).get(...params) ?? null) as T | null;
@@ -77,6 +79,9 @@ beforeAll(async () => {
   handle = module.handleRequest;
 });
 describe('Worker API と D1', () => {
+  it('100 個を超えるバインド変数を拒否する', () => {
+    expect(() => adapter.prepare('SELECT 1').bind(...Array(101).fill(1))).toThrow('too many SQL variables');
+  });
   it('公開コンテンツとセキュリティヘッダを返す', async () => {
     const content = await call('/api/content', 'GET', undefined, false);
     expect(content.status).toBe(200);
