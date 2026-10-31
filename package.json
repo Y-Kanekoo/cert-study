@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "validate": "node --import tsx scripts/validate-content.ts",
+    "stats": "node --import tsx scripts/stats.ts",
     "build": "node --import tsx scripts/build.ts",
     "test": "vitest run",
     "lint": "eslint . && tsc --noEmit && npm run format:check",

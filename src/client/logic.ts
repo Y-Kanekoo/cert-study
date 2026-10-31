@@ -31,7 +31,7 @@ export function homeStats(
   };
 }
 
-export const choiceLabel = (index: number): string => ['ア', 'イ', 'ウ', 'エ'][index] ?? '';
+export const choiceLabel = (index: number): string => ['ア', 'イ', 'ウ', 'エ', 'オ'][index] ?? '';
 
 export function remainingMs(startedAt: string, minutes: number, at: number): number {
   return Math.max(0, minutes * 60000 - (at - Date.parse(startedAt)));
