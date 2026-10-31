@@ -7,7 +7,7 @@ workers_dev = true
 [[d1_databases]]
 binding = "DB"
 database_name = "cert-study"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
 migrations_dir = "migrations"
 
 [vars]
@@ -22,7 +22,7 @@ workers_dev = true
 [[env.fe.d1_databases]]
 binding = "DB"
 database_name = "cert-study"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
 migrations_dir = "migrations"
 
 [env.fe.vars]
@@ -37,7 +37,7 @@ workers_dev = true
 [[env.ap.d1_databases]]
 binding = "DB"
 database_name = "cert-study"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
 migrations_dir = "migrations"
 
 [env.ap.vars]
@@ -52,7 +52,7 @@ workers_dev = true
 [[env.jstqb.d1_databases]]
 binding = "DB"
 database_name = "cert-study"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "e15ddc49-8eaf-439e-82bc-ed7729b310d8"
 migrations_dir = "migrations"
 
 [env.jstqb.vars]
