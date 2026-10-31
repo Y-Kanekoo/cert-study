@@ -31,5 +31,6 @@ jobs:
   e2e:
     kind: e2e
     stage: e2e
-    run: "npx playwright test --grep @smoke"
+    # e2e/server.ts は dist/ のビルド結果を読み込むので、先に build する（npm run e2e と同じ順）。
+    run: ["npm run build", "npx playwright test --grep @smoke"]
 include_auto: false
