@@ -2,7 +2,7 @@
 // 対象プロジェクトの API・外部連携の契約テストは、これを参考に test/api/<対象>.test.ts として追加する。
 import "../support/network-guard.ts";
 import { afterEach, describe, expect, it } from "vitest";
-import { startFakeServer, type FakeServer } from "./support/fake-server.ts";
+import { type FakeServer, startFakeServer } from "./support/fake-server.ts";
 
 let fake: FakeServer | undefined;
 
