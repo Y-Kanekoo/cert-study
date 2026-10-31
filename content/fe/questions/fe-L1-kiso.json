@@ -319,14 +319,14 @@
       "CSS",
       "HTML",
       "XML",
-      "Markdown"
+      "JSON"
     ],
     "answer": 1,
     "choiceNotes": [
       "表示のスタイルを指定する。",
       "Web文書の見出しや段落を要素で表す。",
       "任意の構造化データを表せるが、Web文書の標準要素名は定めない。",
-      "見出しを簡潔に書ける記法だが、ブラウザで扱う要素の基盤はHTMLである。"
+      "データ交換用のテキスト形式で、見出しや段落といった文書構造の要素は持たない。"
     ],
     "explanation": "HTMLは見出しや段落の意味上の構造を要素で記述する。CSSは主に表示方法を指定する。",
     "keywords": [
@@ -457,7 +457,7 @@
     "type": "mcq",
     "difficulty": 2,
     "section": "B",
-    "question": "整数427の桁を反転する関数reverseDigits()の戻り値はどれか。divは整数商、modは余りを表す。",
+    "question": "次の関数について、reverseDigits(427) の戻り値はどれか。divは整数商、modは余りを表す。",
     "code": "○整数型: reverseDigits(整数型: n)\n  整数型: r ← 0\n  while n > 0\n    r ← r × 10 + n mod 10\n    n ← n div 10\n  endwhile\n  return r",
     "choices": [
       "742",
