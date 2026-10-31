@@ -1,0 +1,4 @@
+[
+  {"id":"fe-test-001","exam":"fe","topic":"fe-M09-03","type":"mcq","difficulty":1,"section":"A","question":"SQLで行を絞り込む句はどれか。","choices":["WHERE","ORDER BY","GROUP BY","SELECT"],"answer":0,"choiceNotes":["条件を指定する","並べ替える","集約する","列を指定する"],"explanation":"WHERE句を使って条件に合う行を抽出します。","status":"verified","origin":"original"},
+  {"id":"fe-test-002","exam":"fe","topic":"fe-M10-03","type":"mcq","difficulty":2,"section":"A","question":"通信相手の接続を確認するプロトコルはどれか。","choices":["HTTP","ICMP","SMTP","FTP"],"answer":1,"choiceNotes":["Web用","疎通確認に使う","メール送信に使う","ファイル転送に使う"],"explanation":"ICMPのエコー要求と応答で疎通を確認できます。","status":"verified","origin":"original"}
+]
