@@ -1,0 +1,16 @@
+{
+  "exam": "jstqb",
+  "name": "JSTQB Foundation Level",
+  "shortName": "JSTQB FL",
+  "appTitle": "JSTQB FL 学習＆定着チェック",
+  "themeColor": "#0f8a5f",
+  "mockExams": [
+    { "id": "jstqb-full", "name": "本番形式 模擬（40問・60分）", "section": "A", "questionCount": 40, "minutes": 60, "passRatio": 0.65,
+      "distribution": [ { "prefix": "jstqb-C1", "count": 8 }, { "prefix": "jstqb-C2", "count": 6 }, { "prefix": "jstqb-C3", "count": 4 }, { "prefix": "jstqb-C4", "count": 11 }, { "prefix": "jstqb-C5", "count": 9 }, { "prefix": "jstqb-C6", "count": 2 } ] },
+    { "id": "jstqb-mini", "name": "ミニ模擬（15問・23分）", "section": "A", "questionCount": 15, "minutes": 23, "passRatio": 0.65 }
+  ],
+  "notes": [
+    "本試験は40問・四肢択一（一部複数選択）・60分、65%（26問）以上で合格。章別出題数は 1章8・2章6・3章4・4章11・5章9・6章2 を目安にしています。",
+    "学習の目的（FL-x.y.z）と知識レベル（K1〜K3）は JSTQB FL シラバス Version 2023V4.0.J02 に基づきます。"
+  ]
+}

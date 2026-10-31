@@ -1,0 +1,18 @@
+{
+  "exam": "fe",
+  "name": "基本情報技術者試験",
+  "shortName": "FE",
+  "appTitle": "基本情報 学習＆定着チェック",
+  "themeColor": "#1e6fd9",
+  "mockExams": [
+    { "id": "fe-A", "name": "科目A 模擬（60問・90分）", "section": "A", "questionCount": 60, "minutes": 90, "passRatio": 0.6,
+      "distribution": [ { "prefix": "fe-L1", "weight": 0.18 }, { "prefix": "fe-L2", "weight": 0.14 }, { "prefix": "fe-L3", "weight": 0.24 }, { "prefix": "fe-L4", "weight": 0.1 }, { "prefix": "fe-L5", "weight": 0.05 }, { "prefix": "fe-L6", "weight": 0.07 }, { "prefix": "fe-L7", "weight": 0.07 }, { "prefix": "fe-L8", "weight": 0.07 }, { "prefix": "fe-L9", "weight": 0.08 } ] },
+    { "id": "fe-A-mini", "name": "科目A ミニ模擬（20問・30分）", "section": "A", "questionCount": 20, "minutes": 30, "passRatio": 0.6 },
+    { "id": "fe-B", "name": "科目B 模擬（擬似言語・セキュリティ）", "section": "B", "questionCount": 20, "minutes": 100, "passRatio": 0.6 }
+  ],
+  "notes": [
+    "本試験の科目Aは四肢択一60問・90分、科目Bは多肢選択式20問・100分（アルゴリズムとプログラミング16問・情報セキュリティ4問）。出典: IPA 試験要綱 Ver.5.6。",
+    "本アプリの模擬試験は問題バンクから構成比に近づけて抽出します。収録数が足りない場合は出題数が少なくなります。",
+    "合格基準の目安として正答率60%を表示します（本試験はIRTによる1000点満点・600点以上）。"
+  ]
+}

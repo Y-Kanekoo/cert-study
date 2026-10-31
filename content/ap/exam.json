@@ -1,0 +1,18 @@
+{
+  "exam": "ap",
+  "name": "応用情報技術者試験",
+  "shortName": "AP",
+  "appTitle": "応用情報 学習＆定着チェック",
+  "themeColor": "#7a3fd1",
+  "mockExams": [
+    { "id": "ap-A", "name": "科目A（午前）模擬（80問・150分）", "section": "A", "questionCount": 80, "minutes": 150, "passRatio": 0.6,
+      "distribution": [ { "prefix": "ap-L1", "weight": 0.12 }, { "prefix": "ap-L2", "weight": 0.16 }, { "prefix": "ap-L3", "weight": 0.25 }, { "prefix": "ap-L4", "weight": 0.09 }, { "prefix": "ap-L5", "weight": 0.05 }, { "prefix": "ap-L6", "weight": 0.1 }, { "prefix": "ap-L7", "weight": 0.07 }, { "prefix": "ap-L8", "weight": 0.08 }, { "prefix": "ap-L9", "weight": 0.08 } ] },
+    { "id": "ap-A-mini", "name": "科目A ミニ模擬（20問・38分）", "section": "A", "questionCount": 20, "minutes": 38, "passRatio": 0.6 },
+    { "id": "ap-B-self", "name": "科目B（午後）記述セルフチェック（5問）", "section": "B", "questionCount": 5, "minutes": 150, "passRatio": 0.6, "selfGraded": true }
+  ],
+  "notes": [
+    "本試験の科目A（午前）は四肢択一80問・150分、科目B（午後）は記述式11問中5問解答・150分（問1 情報セキュリティは必須）。出典: IPA 試験要綱 Ver.5.6。",
+    "科目Bは長文読解＋記述式のため、本アプリでは短い事例＋記述設問の『セルフ採点』形式で練習します（模範解答と採点観点を見て自己評価）。本試験と同等の長文問題・採点ではありません。",
+    "合格基準の目安として正答率60%を表示します。"
+  ]
+}

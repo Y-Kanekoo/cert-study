@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Y-Kanekoo/cert-study/content/schema/question.schema.json",
+  "title": "Question file (array of questions)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "exam", "topic", "type", "difficulty", "section", "question", "explanation", "status", "origin"],
+    "properties": {
+      "id": { "type": "string", "pattern": "^(fe|ap|jstqb)-[a-z0-9-]+$", "description": "Unique, stable ID. Never reuse or renumber." },
+      "exam": { "enum": ["fe", "ap", "jstqb"] },
+      "topic": { "type": "string", "description": "Leaf node ID in content/<exam>/syllabus.json (IPA 小分類 like fe-M09-03, or JSTQB learning objective like FL-4.2.2)" },
+      "type": { "enum": ["mcq", "self"], "description": "mcq = 4-choice single answer; self = short written answer graded by the learner" },
+      "difficulty": { "type": "integer", "minimum": 1, "maximum": 3 },
+      "section": { "enum": ["A", "B"], "description": "FE/AP: 科目A or 科目B. JSTQB: always A" },
+      "k": { "type": "integer", "minimum": 1, "maximum": 3, "description": "JSTQB K-level of the learning objective" },
+      "question": { "type": "string", "minLength": 10 },
+      "code": { "type": "string", "description": "Optional pseudo-code / table block shown in monospace" },
+      "choices": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string", "minLength": 1 } },
+      "answer": { "type": "integer", "minimum": 0, "maximum": 3, "description": "Index of the correct choice (mcq only)" },
+      "choiceNotes": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" }, "description": "Why each choice is right/wrong" },
+      "modelAnswer": { "type": "string", "description": "self only" },
+      "rubric": { "type": "array", "items": { "type": "string" }, "description": "self only: grading points" },
+      "explanation": { "type": "string", "minLength": 10 },
+      "keywords": { "type": "array", "items": { "type": "string" } },
+      "status": { "enum": ["verified", "draft", "flagged"], "description": "Only verified questions ship to the app" },
+      "origin": { "const": "original", "description": "All questions are original. Never copy past exam questions." },
+      "reviewNote": { "type": "string" }
+    }
+  }
+}
