@@ -7,6 +7,7 @@ import {
   selectRetention,
   weakTopics,
 } from '../shared/study';
+import { filterPracticeQuestions, type WrongPeriod } from '../shared/filters';
 import { dueQueue, updateSrs } from '../shared/sm2';
 import { isCorrectChoice, selectedIndices } from '../shared/grading';
 import { inSubtree, topicMap } from '../shared/content';
@@ -252,25 +253,42 @@ function practice(): void {
     title: path.map((n) => n.title).join(' / '),
   }));
   const options = `<option value="">すべて</option>${topics.map((t) => `<option value="${esc(t.id)}" ${params.get('topic') === t.id ? 'selected' : ''}>${esc(t.title)}</option>`).join('')}`;
+  const periods: { value: WrongPeriod; label: string }[] = [
+    { value: 'ever', label: 'すべて' },
+    { value: 'latest-wrong', label: '直近の回答が誤り' },
+    { value: 'last-7-days', label: '7日以内' },
+    { value: 'last-30-days', label: '30日以内' },
+    { value: 'last-90-days', label: '90日以内' },
+  ];
   shell(
-    `<h2>練習</h2><form class="form panel" id="practice-form"><label>トピック<select name="topic">${options}</select></label><label>難易度<select name="difficulty"><option value="">すべて</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label><label class="inline"><input type="checkbox" name="unanswered">未回答のみ</label><label class="inline"><input type="checkbox" name="wrong">間違えた問題のみ</label><label>問題数<input type="number" name="count" min="1" max="100" value="10"></label><button class="btn" type="submit">開始</button></form>`,
+    `<h2>練習</h2><form class="form panel" id="practice-form"><label>トピック<select name="topic">${options}</select></label><label>難易度<select name="difficulty"><option value="">すべて</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label><label class="inline"><input type="checkbox" name="unanswered">未回答のみ</label><label class="inline"><input type="checkbox" name="wrong">間違えた問題のみ</label><label>誤答の期間<select name="wrongPeriod" disabled>${periods.map((period) => `<option value="${period.value}" ${period.value === 'latest-wrong' ? 'selected' : ''}>${period.label}</option>`).join('')}</select></label><label class="inline"><input type="checkbox" name="unresolved" disabled>未克服のみ</label><label>問題数<input type="number" name="count" min="1" max="100" value="10"></label><button class="btn" type="submit">開始</button></form>`,
   );
+  const wrongCheckbox = $<HTMLInputElement>('[name="wrong"]');
+  wrongCheckbox?.addEventListener('change', () => {
+    for (const name of ['wrongPeriod', 'unresolved']) {
+      const field = $(`[name="${name}"]`);
+      if (field && 'disabled' in field) field.disabled = !wrongCheckbox.checked;
+    }
+  });
   $('#practice-form')?.addEventListener('submit', (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget as HTMLFormElement);
     const map = topicMap(content.syllabus);
     const topic = String(data.get('topic') ?? '');
     const difficulty = Number(data.get('difficulty'));
-    const answered = new Set(progress.attempts.map((a) => a.questionId));
-    const latest = new Map(progress.attempts.map((a) => [a.questionId, a]));
-    const wrong = new Set([...latest.values()].filter((a) => !a.correct).map((a) => a.questionId));
-    const pool = content.questions.filter(
-      (q) =>
-        inSubtree(q, topic, map) &&
-        (!difficulty || q.difficulty === difficulty) &&
-        (!data.has('unanswered') || !answered.has(q.id)) &&
-        (!data.has('wrong') || wrong.has(q.id)),
+    const filtered = filterPracticeQuestions(
+      content.questions,
+      progress.attempts,
+      {
+        difficulty,
+        unansweredOnly: data.has('unanswered'),
+        wrongOnly: data.has('wrong'),
+        wrongPeriod: periods.find((period) => period.value === data.get('wrongPeriod'))?.value,
+        unresolvedOnly: data.has('unresolved'),
+      },
+      now(),
     );
+    const pool = filtered.filter((q) => inSubtree(q, topic, map));
     startRun('practice', shuffle(pool).slice(0, Math.min(100, Number(data.get('count')) || 10)));
   });
 }
