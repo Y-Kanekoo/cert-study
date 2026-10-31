@@ -1,12 +1,14 @@
 import {
   aggregateTopics,
   composeMock,
+  mockTypes,
   retentionRates,
   scoreHistory,
   selectRetention,
   weakTopics,
 } from '../shared/study';
 import { dueQueue, updateSrs } from '../shared/sm2';
+import { isCorrectChoice, selectedIndices } from '../shared/grading';
 import { inSubtree, topicMap } from '../shared/content';
 import {
   emptyProgress,
@@ -27,6 +29,7 @@ type Run = {
   questions: Question[];
   current: number;
   answers: Record<string, Answer>;
+  drafts: Record<string, number>;
   orders: Record<string, number[]>;
   flags: Set<string>;
   uncertain: Set<string>;
@@ -305,7 +308,7 @@ function mock(): void {
     `<h2>模擬試験</h2><div class="grid two">${content.exam.mockExams
       .map((config) => {
         const count = content.questions.filter(
-          (q) => q.section === config.section && (config.selfGraded ? q.type === 'self' : q.type === 'mcq'),
+          (q) => q.section === config.section && mockTypes(config).includes(q.type),
         ).length;
         return `<div class="panel"><h3>${esc(config.name)}</h3><p>制限時間 ${config.minutes}分・収録 ${count}問</p><button class="btn" data-mock="${esc(config.id)}" ${count ? '' : 'disabled'}>開始</button></div>`;
       })
@@ -337,12 +340,15 @@ function startRun(modeValue: RunMode, questions: Question[], options: Partial<Ru
     return;
   }
   const orders: Record<string, number[]> = {};
-  for (const q of questions) if (q.type === 'mcq') orders[q.id] = shuffle([0, 1, 2, 3]);
+  for (const q of questions)
+    if (q.type !== 'self')
+      orders[q.id] = shuffle(Array.from({ length: q.choices?.length ?? 0 }, (_, index) => index));
   run = {
     mode: modeValue,
     questions,
     current: 0,
     answers: {},
+    drafts: {},
     orders,
     flags: new Set(),
     uncertain: new Set(),
@@ -371,6 +377,15 @@ function formatTime(ms: number): string {
 function selected(q: Question): Answer | undefined {
   return run?.answers[q.id];
 }
+function isCorrect(q: Question, answer: Answer | undefined): boolean {
+  return q.type === 'self' ? (answer?.selfScore ?? 0) >= 1 : isCorrectChoice(q, answer?.choice);
+}
+function correctChoices(q: Question, order: number[]): string {
+  const indices = q.type === 'multi' ? (q.answers ?? []) : [q.answer ?? -1];
+  return indices
+    .map((index) => `${choiceLabel(order.indexOf(index))}. ${esc(q.choices?.[index])}`)
+    .join('、');
+}
 function renderRun(): void {
   if (!run) return;
   if (run.stage === 'result') {
@@ -383,21 +398,21 @@ function renderRun(): void {
   }
   const q = run.questions[run.current];
   const answer = selected(q);
+  const draftChoice = run.drafts[q.id] ?? answer?.choice;
   const immediate = run.mode === 'practice' || run.mode === 'review';
   const feedback = immediate && run.feedback;
   const order = run.orders[q.id] ?? [];
   const choiceHtml =
     q.type === 'mcq'
       ? `<div class="choices">${order.map((original, i) => `<button class="choice ${answer?.choice === original ? 'selected' : ''} ${feedback && original === q.answer ? 'correct' : ''} ${feedback && answer?.choice === original && original !== q.answer ? 'wrong' : ''}" data-choice="${original}" ${feedback ? 'disabled' : ''}>${choiceLabel(i)}. ${esc(q.choices?.[original])}</button>`).join('')}</div>`
-      : `<label class="form">回答<textarea id="self-text" rows="5" ${feedback ? 'disabled' : ''}>${esc(answer?.selfText ?? '')}</textarea></label>${immediate && !feedback ? '<button class="btn" id="self-reveal">模範解答を表示</button>' : ''}`;
+      : q.type === 'multi'
+        ? `<fieldset class="choices multi-choices" ${feedback ? 'disabled' : ''}><legend>（${q.answers?.length ?? 0} つ選択）</legend>${order.map((original, i) => `<label class="choice ${selectedIndices(draftChoice, q.choices?.length ?? 0).includes(original) ? 'selected' : ''} ${feedback && q.answers?.includes(original) ? 'correct' : ''} ${feedback && selectedIndices(draftChoice, q.choices?.length ?? 0).includes(original) && !q.answers?.includes(original) ? 'wrong' : ''}"><input type="checkbox" data-multi="${original}" ${selectedIndices(draftChoice, q.choices?.length ?? 0).includes(original) ? 'checked' : ''}>${choiceLabel(i)}. ${esc(q.choices?.[original])}</label>`).join('')}</fieldset>${!feedback ? `<button class="btn" id="multi-answer" ${selectedIndices(draftChoice, q.choices?.length ?? 0).length === q.answers?.length ? '' : 'disabled'}>解答</button>` : ''}`
+        : `<label class="form">回答<textarea id="self-text" rows="5" ${feedback ? 'disabled' : ''}>${esc(answer?.selfText ?? '')}</textarea></label>${immediate && !feedback ? '<button class="btn" id="self-reveal">模範解答を表示</button>' : ''}`;
   const notes =
-    feedback && q.type === 'mcq' && q.choiceNotes
+    feedback && q.type !== 'self' && q.choiceNotes
       ? `<ul>${order.map((original, i) => `<li>${choiceLabel(i)}. ${esc(q.choices?.[original])}: ${esc(q.choiceNotes?.[original])}</li>`).join('')}</ul>`
       : '';
-  const correctChoice =
-    q.type === 'mcq' && feedback
-      ? `<p>正解: ${choiceLabel(order.indexOf(q.answer ?? -1))}. ${esc(q.choices?.[q.answer ?? 0])}</p>`
-      : '';
+  const correctChoice = q.type !== 'self' && feedback ? `<p>正解: ${correctChoices(q, order)}</p>` : '';
   const selfFeedback =
     q.type === 'self' && feedback
       ? `<p>模範解答: ${esc(q.modelAnswer)}</p><ul>${q.rubric?.map((point) => `<li>${esc(point)}</li>`).join('') ?? ''}</ul>${answer?.selfScore === undefined ? '<div class="actions"><button class="btn secondary" data-score="0">できなかった</button><button class="btn secondary" data-score="1">一部できた</button><button class="btn secondary" data-score="2">できた</button></div>' : ''}`
@@ -407,7 +422,7 @@ function renderRun(): void {
       ? `<div class="palette" aria-label="問題一覧">${run.questions.map((item, i) => `<button data-index="${i}" class="${i === run!.current ? 'active' : ''} ${run!.answers[item.id] ? 'answered' : ''} ${run!.flags.has(item.id) ? 'flagged' : ''}" aria-label="${i + 1}問目">${i + 1}</button>`).join('')}</div>`
       : '';
   shell(
-    `<div class="panel"><div class="inline"><span>${run.current + 1} / ${run.questions.length}</span>${run.mode === 'mock' ? `<span class="timer" id="timer" role="timer" aria-label="残り時間">残り時間 ${formatTime(remainingMs(run.startedAt, run.minutes ?? 0, Date.now()))}</span>` : ''}</div><p class="muted">${esc(q.topic)}・難易度 ${q.difficulty}</p><p class="question">${esc(q.question)}</p>${q.code ? `<pre class="code">${esc(q.code)}</pre>` : ''}${choiceHtml}${q.type === 'mcq' && !feedback ? `<label class="inline"><input type="checkbox" id="uncertain" ${run.uncertain.has(q.id) ? 'checked' : ''}>自信なし</label>` : ''}${feedback ? `<div class="feedback"><strong>${esc(run.feedback)}</strong>${correctChoice}<p>${esc(q.explanation)}</p>${notes}${selfFeedback}</div>` : ''}<div class="actions">${run.mode === 'mock' ? `<button class="btn secondary" id="flag">${run.flags.has(q.id) ? '見直し解除' : '見直しに追加'}</button>` : ''}${immediate ? `<button class="btn" id="next" ${!answer || (q.type === 'self' && answer.selfScore === undefined) ? 'disabled' : ''}>${run.current + 1 === run.questions.length ? '結果を見る' : '次の問題'}</button>` : `<button class="btn secondary" id="prev" ${run.current === 0 ? 'disabled' : ''}>前へ</button><button class="btn secondary" id="next" ${run.current + 1 === run.questions.length ? 'disabled' : ''}>次へ</button><button class="btn" id="submit">提出する</button>`}</div>${palette}</div>`,
+    `<div class="panel"><div class="inline"><span>${run.current + 1} / ${run.questions.length}</span>${run.mode === 'mock' ? `<span class="timer" id="timer" role="timer" aria-label="残り時間">残り時間 ${formatTime(remainingMs(run.startedAt, run.minutes ?? 0, Date.now()))}</span>` : ''}</div><p class="muted">${esc(q.topic)}・難易度 ${q.difficulty}</p><p class="question">${esc(q.question)}</p>${q.code ? `<pre class="code">${esc(q.code)}</pre>` : ''}${choiceHtml}${q.type !== 'self' && !feedback ? `<label class="inline"><input type="checkbox" id="uncertain" ${run.uncertain.has(q.id) ? 'checked' : ''}>自信なし</label>` : ''}${feedback ? `<div class="feedback"><strong>${esc(run.feedback)}</strong>${correctChoice}<p>${esc(q.explanation)}</p>${notes}${selfFeedback}</div>` : ''}<div class="actions">${run.mode === 'mock' ? `<button class="btn secondary" id="flag">${run.flags.has(q.id) ? '見直し解除' : '見直しに追加'}</button>` : ''}${immediate ? `<button class="btn" id="next" ${!answer || (q.type === 'multi' && !feedback) || (q.type === 'self' && answer.selfScore === undefined) ? 'disabled' : ''}>${run.current + 1 === run.questions.length ? '結果を見る' : '次の問題'}</button>` : `<button class="btn secondary" id="prev" ${run.current === 0 ? 'disabled' : ''}>前へ</button><button class="btn secondary" id="next" ${run.current + 1 === run.questions.length ? 'disabled' : ''}>次へ</button><button class="btn" id="submit">提出する</button>`}</div>${palette}</div>`,
   );
   $('#uncertain')?.addEventListener('change', (event) => {
     if ((event.target as HTMLInputElement).checked) run!.uncertain.add(q.id);
@@ -423,6 +438,26 @@ function renderRun(): void {
       }
     }),
   );
+  document.querySelectorAll<HTMLInputElement>('[data-multi]').forEach((input) =>
+    input.addEventListener('change', () => {
+      const index = Number(input.dataset.multi);
+      const previous = run!.drafts[q.id] ?? run!.answers[q.id]?.choice ?? 0;
+      const choice = input.checked ? previous | (1 << index) : previous & ~(1 << index);
+      run!.drafts[q.id] = choice;
+      delete run!.answers[q.id];
+      renderRun();
+    }),
+  );
+  $('#multi-answer')?.addEventListener('click', () => {
+    const choice = run!.drafts[q.id] ?? run!.answers[q.id]?.choice;
+    if (selectedIndices(choice, q.choices?.length ?? 0).length !== q.answers?.length) return;
+    const committed = { choice, elapsedMs: Date.now() - run!.questionAt };
+    if (immediate) void answerImmediate(q, committed);
+    else {
+      run!.answers[q.id] = committed;
+      renderRun();
+    }
+  });
   $('#self-reveal')?.addEventListener('click', () => {
     const text = ($<HTMLTextAreaElement>('#self-text')?.value ?? '').trim();
     if (!text) {
@@ -479,7 +514,7 @@ function renderRun(): void {
 async function answerImmediate(q: Question, answer: Answer): Promise<void> {
   if (!run) return;
   run.answers[q.id] = answer;
-  run.feedback = answer.choice === q.answer ? '正解' : '不正解';
+  run.feedback = isCorrect(q, answer) ? '正解' : '不正解';
   renderRun();
   await saveImmediate(q);
 }
@@ -490,12 +525,12 @@ async function saveImmediate(q: Question): Promise<void> {
   renderRun();
 }
 function makeAttempt(q: Question, answer: Answer | undefined): Attempt {
-  const correct = q.type === 'self' ? (answer?.selfScore ?? 0) >= 1 : answer?.choice === q.answer;
+  const correct = isCorrect(q, answer);
   return {
     questionId: q.id,
     mode: run!.mode,
     correct,
-    choice: q.type === 'mcq' ? (answer?.choice ?? null) : null,
+    choice: q.type !== 'self' ? (answer?.choice ?? null) : null,
     selfScore: q.type === 'self' ? (answer?.selfScore ?? 0) : null,
     lowConfidence: run!.uncertain.has(q.id),
     gapDays: run!.mode === 'retention' ? run!.gapDays : null,
@@ -521,7 +556,7 @@ async function submitRun(): Promise<void> {
   }
   const correct = run.questions.filter((q) => {
     const a = run!.answers[q.id];
-    return q.type === 'self' ? (a?.selfScore ?? 0) >= 1 : a?.choice === q.answer;
+    return isCorrect(q, a);
   }).length;
   const session: Session = {
     kind: run.mode === 'mock' ? 'mock' : 'practice',
@@ -565,7 +600,7 @@ async function submitRunAfterGrading(): Promise<void> {
   const current = run!;
   const correct = current.questions.filter((q) => {
     const a = current.answers[q.id];
-    return q.type === 'self' ? (a?.selfScore ?? 0) >= 1 : a?.choice === q.answer;
+    return isCorrect(q, a);
   }).length;
   await persistSession({
     kind: current.mode === 'mock' ? 'mock' : 'practice',
@@ -589,7 +624,7 @@ function renderResult(): void {
   const current = run!;
   const correct = current.questions.filter((q) => {
     const a = current.answers[q.id];
-    return q.type === 'self' ? (a?.selfScore ?? 0) >= 1 : a?.choice === q.answer;
+    return isCorrect(q, a);
   }).length;
   const map = topicMap(content.syllabus);
   const majors = content.syllabus.tree
@@ -597,7 +632,7 @@ function renderResult(): void {
       const items = current.questions.filter((q) => map.get(q.topic)?.[0]?.id === node.id);
       const hits = items.filter((q) => {
         const a = current.answers[q.id];
-        return q.type === 'self' ? (a?.selfScore ?? 0) >= 1 : a?.choice === q.answer;
+        return isCorrect(q, a);
       }).length;
       return items.length
         ? `<li>${esc(node.title)}: ${hits}/${items.length}（${pct(hits / items.length)}）</li>`
@@ -608,8 +643,8 @@ function renderResult(): void {
     `<h2>結果</h2><div class="panel"><p class="result ${correct / current.questions.length >= (current.passRatio ?? 0.6) ? 'good' : 'bad'}">${correct}/${current.questions.length}問正解（${pct(correct / current.questions.length)}）</p>${current.mode === 'mock' ? `<p>合否目安: ${correct / current.questions.length >= (current.passRatio ?? 0.6) ? '合格圏' : '要復習'}</p>` : ''}<h3>分野別</h3><ul>${majors}</ul><h3>解答と解説</h3><ol>${current.questions
       .map((q) => {
         const a = current.answers[q.id];
-        const hit = q.type === 'self' ? (a?.selfScore ?? 0) >= 1 : a?.choice === q.answer;
-        return `<li><strong>${esc(q.question)}</strong><p class="${hit ? 'good' : 'bad'}">${hit ? '正解' : '不正解'}${q.type === 'mcq' ? `・正解: ${choiceLabel((current.orders[q.id] ?? []).indexOf(q.answer ?? -1))}. ${esc(q.choices?.[q.answer ?? 0])}` : ''}</p><p>${esc(q.explanation)}</p>${q.type === 'mcq' && q.choiceNotes ? `<ul>${(current.orders[q.id] ?? []).map((original, i) => `<li>${choiceLabel(i)}. ${esc(q.choices?.[original])}: ${esc(q.choiceNotes?.[original])}</li>`).join('')}</ul>` : ''}</li>`;
+        const hit = isCorrect(q, a);
+        return `<li><strong>${esc(q.question)}</strong><p class="${hit ? 'good' : 'bad'}">${hit ? '正解' : '不正解'}${q.type !== 'self' ? `・正解: ${correctChoices(q, current.orders[q.id] ?? [])}` : ''}</p><p>${esc(q.explanation)}</p>${q.type !== 'self' && q.choiceNotes ? `<ul>${(current.orders[q.id] ?? []).map((original, i) => `<li>${choiceLabel(i)}. ${esc(q.choices?.[original])}: ${esc(q.choiceNotes?.[original])}</li>`).join('')}</ul>` : ''}</li>`;
       })
       .join('')}</ol><button class="btn" id="end-run">戻る</button></div>`,
   );

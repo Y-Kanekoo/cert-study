@@ -30,9 +30,7 @@ export function composeMock(
   random: () => number = Math.random,
 ): Question[] {
   const available = shuffle(
-    questions.filter(
-      (q) => q.section === config.section && (config.selfGraded ? q.type === 'self' : q.type === 'mcq'),
-    ),
+    questions.filter((q) => q.section === config.section && mockTypes(config).includes(q.type)),
     random,
   );
   const limit = Math.min(config.questionCount, available.length);
@@ -70,6 +68,9 @@ export function composeMock(
     }
   }
   return shuffle(selected, random);
+}
+export function mockTypes(config: MockConfig): Question['type'][] {
+  return config.types ?? (config.selfGraded ? ['self'] : ['mcq', 'multi']);
 }
 function shuffle<T>(items: T[], random: () => number): T[] {
   const result = [...items];
