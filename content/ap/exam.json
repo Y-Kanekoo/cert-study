@@ -8,7 +8,8 @@
     { "id": "ap-A", "name": "科目A（午前）模擬（80問・150分）", "section": "A", "questionCount": 80, "minutes": 150, "passRatio": 0.6,
       "distribution": [ { "prefix": "ap-L1", "weight": 0.12 }, { "prefix": "ap-L2", "weight": 0.16 }, { "prefix": "ap-L3", "weight": 0.25 }, { "prefix": "ap-L4", "weight": 0.09 }, { "prefix": "ap-L5", "weight": 0.05 }, { "prefix": "ap-L6", "weight": 0.1 }, { "prefix": "ap-L7", "weight": 0.07 }, { "prefix": "ap-L8", "weight": 0.08 }, { "prefix": "ap-L9", "weight": 0.08 } ] },
     { "id": "ap-A-mini", "name": "科目A ミニ模擬（20問・38分）", "section": "A", "questionCount": 20, "minutes": 38, "passRatio": 0.6 },
-    { "id": "ap-B-self", "name": "科目B（午後）記述セルフチェック（5問）", "section": "B", "questionCount": 5, "minutes": 150, "passRatio": 0.6, "selfGraded": true }
+    { "id": "ap-B-case", "name": "科目B 事例（選択式）ミニ模擬（10問・40分）", "section": "B", "questionCount": 10, "minutes": 40, "passRatio": 0.6, "types": ["mcq", "multi"] },
+    { "id": "ap-B-self", "name": "科目B（午後）記述セルフチェック（5問）", "section": "B", "questionCount": 5, "minutes": 150, "passRatio": 0.6, "selfGraded": true, "types": ["self"] }
   ],
   "notes": [
     "本試験の科目A（午前）は四肢択一80問・150分、科目B（午後）は記述式11問中5問解答・150分（問1 情報セキュリティは必須）。出典: IPA 試験要綱 Ver.5.6。",

@@ -4,7 +4,7 @@ export type Question = {
   id: string;
   exam: ExamId;
   topic: string;
-  type: 'mcq' | 'self';
+  type: 'mcq' | 'multi' | 'self';
   difficulty: 1 | 2 | 3;
   section: 'A' | 'B';
   k?: number;
@@ -12,6 +12,7 @@ export type Question = {
   code?: string;
   choices?: string[];
   answer?: number;
+  answers?: number[];
   choiceNotes?: string[];
   modelAnswer?: string;
   rubric?: string[];
@@ -42,6 +43,7 @@ export type MockConfig = {
   minutes: number;
   passRatio: number;
   selfGraded?: boolean;
+  types?: Question['type'][];
   distribution?: { prefix: string; weight?: number; count?: number }[];
 };
 export type ExamConfig = {
