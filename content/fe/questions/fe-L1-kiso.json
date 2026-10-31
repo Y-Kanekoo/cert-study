@@ -1,0 +1,714 @@
+[
+  {
+    "id": "fe-a-0001",
+    "exam": "fe",
+    "topic": "fe-M01-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "8ビットの符号なし整数 10110110₂ を16進数で表したものはどれか。",
+    "choices": [
+      "B6₁₆",
+      "A6₁₆",
+      "B5₁₆",
+      "D6₁₆"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "4ビットずつ区切ると1011と0110になり、16進数ではBと6である。",
+      "上位4ビットは1011でありAではない。",
+      "下位4ビットは0110であり5ではない。",
+      "上位4ビットは1101ではない。"
+    ],
+    "explanation": "4ビットずつ区切ると1011と0110になり、16進数ではBと6である。したがってB6₁₆となる。",
+    "keywords": [
+      "離散数学"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0002",
+    "exam": "fe",
+    "topic": "fe-M01-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "8ビットの2の補数表現で 11110101₂ が表す10進整数はどれか。",
+    "choices": [
+      "−21",
+      "−11",
+      "−10",
+      "11"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "下位ビットの値を誤っている。",
+      "ビットを反転すると00001010₂、1を足すと00001011₂で大きさは11である。",
+      "全ビット反転後に1を足すと11になる。",
+      "最上位ビットが1なので負数である。"
+    ],
+    "explanation": "ビットを反転すると00001010₂、1を足すと00001011₂で大きさは11である。最上位ビットが1なので値は−11である。",
+    "keywords": [
+      "離散数学"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0003",
+    "exam": "fe",
+    "topic": "fe-M01-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "真理値 A=1、B=0、C=1 のとき、(A AND NOT B) XOR C の値はどれか。",
+    "choices": [
+      "2",
+      "定義できない",
+      "0",
+      "1"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "論理値は0又は1である。",
+      "すべての演算の入力は定義されている。",
+      "NOT B は1なので A AND NOT B は1になる。",
+      "1 XOR 1 は0である。"
+    ],
+    "explanation": "NOT B は1なので A AND NOT B は1になる。1 XOR C、すなわち1 XOR 1は0である。",
+    "keywords": [
+      "離散数学"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0004",
+    "exam": "fe",
+    "topic": "fe-M01-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "赤玉2個と青玉3個の袋から、戻さず2個取り出す。2個とも赤玉である確率はどれか。",
+    "choices": [
+      "1/5",
+      "2/5",
+      "1/4",
+      "1/10"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "2回目の条件付き確率を掛けていない。",
+      "1回目に赤を引く確率だけである。",
+      "分母は2個取り出す組合せ数10である。",
+      "1回目が赤である確率は2/5、続けて赤である確率は1/4である。"
+    ],
+    "explanation": "1回目が赤である確率は2/5、続けて赤である確率は1/4である。積は2/5×1/4=1/10となる。",
+    "keywords": [
+      "応用数学"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0005",
+    "exam": "fe",
+    "topic": "fe-M01-03",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "A",
+    "question": "1文字をASCIIの7ビットで表すとき、異なる符号を最大いくつ割り当てられるか。",
+    "choices": [
+      "128個",
+      "7個",
+      "64個",
+      "256個"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "各ビットに0と1の2通りがあり、7ビットでは2⁷=128通りである。",
+      "ビット数そのものではない。",
+      "これは6ビットの組合せ数である。",
+      "これは8ビットの組合せ数である。"
+    ],
+    "explanation": "各ビットに0と1の2通りがあり、7ビットでは2⁷=128通りである。この数だけ異なる符号を割り当てられる。",
+    "keywords": [
+      "情報に関する理論"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0006",
+    "exam": "fe",
+    "topic": "fe-M01-04",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "1シンボルで4通りの状態を区別できる伝送路で、毎秒100万シンボルを送る。ビットレートはどれか。",
+    "choices": [
+      "8 Mビット/秒",
+      "2 Mビット/秒",
+      "1 Mビット/秒",
+      "4 Mビット/秒"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "シンボル数とビット数を二重に数えている。",
+      "4通りの状態はlog₂4=2ビットを表す。",
+      "1シンボルを1ビットとしている。",
+      "状態数4をそのまま掛けている。"
+    ],
+    "explanation": "4通りの状態はlog₂4=2ビットを表す。毎秒100万シンボルなので100万×2=200万ビット/秒である。",
+    "keywords": [
+      "通信に関する理論"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0007",
+    "exam": "fe",
+    "topic": "fe-M01-05",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "A",
+    "question": "温度が目標値を超えたとき冷却出力を強め、その結果の温度を再測定する制御はどれか。",
+    "choices": [
+      "開ループ制御",
+      "バッチ処理",
+      "フィードバック制御",
+      "フィードフォワード制御"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "出力後の温度を調整に使わない。",
+      "制御方式の説明ではない。",
+      "制御後の温度を測定し、次の出力へ反映している。",
+      "測定した結果を戻して調整する方式ではない。"
+    ],
+    "explanation": "制御後の温度を測定し、次の出力へ反映している。結果を戻して誤差を縮める方式がフィードバック制御である。",
+    "keywords": [
+      "計測・制御に関する理論"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0008",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "A",
+    "question": "先に追加したデータを先に取り出す待ち行列の構造はどれか。",
+    "choices": [
+      "スタック",
+      "二分木",
+      "ハッシュ表",
+      "キュー"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "後入れ先出しの構造である。",
+      "親子関係を表す構造である。",
+      "キーから値を探す構造である。",
+      "キューは先入れ先出しでデータを管理する。"
+    ],
+    "explanation": "キューは先入れ先出しでデータを管理する。受付順に処理する待ち行列に向いている。",
+    "keywords": [
+      "データ構造"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0009",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "128件の候補を二分探索で毎回半分にする。候補が1件になるまで、範囲を半分にする操作を何回行うか。",
+    "choices": [
+      "7回",
+      "6回",
+      "8回",
+      "128回"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "128=2⁷なので、範囲を半分にする操作を7回行うと候補は1件になる。",
+      "2⁶は64で128に届かない。",
+      "半減の回数としては1回多い。",
+      "これは線形探索に近い回数である。"
+    ],
+    "explanation": "128=2⁷なので、範囲を半分にする操作を7回行うと候補は1件になる。二分探索の比較回数はデータ数の対数に比例する。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0010",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "A",
+    "question": "同じ処理を複数の入力値で再利用し、処理内の一時変数を呼出し元から隠したい。適した手法はどれか。",
+    "choices": [
+      "入力値を定数に固定する",
+      "関数に処理をまとめる",
+      "処理を各所に複写する",
+      "すべての変数を大域変数にする"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "異なる入力値を扱えない。",
+      "関数は引数で入力値を受け取り、局所変数を内部に閉じ込められる。",
+      "複写では再利用時の修正箇所が増える。",
+      "一時変数を隠せない。"
+    ],
+    "explanation": "関数は引数で入力値を受け取り、局所変数を内部に閉じ込められる。共通処理を一か所にまとめて再利用できる。",
+    "keywords": [
+      "プログラミング"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0011",
+    "exam": "fe",
+    "topic": "fe-M02-04",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "A",
+    "question": "コンパイル時にソースコード全体を機械語などに翻訳してから実行する方式はどれか。",
+    "choices": [
+      "マークアップ方式",
+      "符号化方式",
+      "コンパイラ方式",
+      "インタプリタ方式"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "文書の構造を記述する方式である。",
+      "データ表現を変換する一般的な操作である。",
+      "コンパイラ方式では実行前にソースコードを翻訳する。",
+      "逐次解釈して実行する方式である。"
+    ],
+    "explanation": "コンパイラ方式では実行前にソースコードを翻訳する。翻訳後の実行形式を繰り返し起動できる。",
+    "keywords": [
+      "プログラム言語"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0012",
+    "exam": "fe",
+    "topic": "fe-M02-05",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "A",
+    "question": "Webページの見出しや段落など、文書の意味上の構造を記述する言語はどれか。",
+    "choices": [
+      "CSS",
+      "SQL",
+      "JSON",
+      "HTML"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "主に表示スタイルを指定する。",
+      "データベースの操作に用いる。",
+      "データ交換形式であり文書の見出しを表す言語ではない。",
+      "HTMLは要素によって見出しや段落などの構造を表す。"
+    ],
+    "explanation": "HTMLは要素によって見出しや段落などの構造を表す。見た目の指定は主にCSSが担う。",
+    "keywords": [
+      "その他の言語"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-a-0013",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "question": "配列 [4, 7, 9, 12] に対して線形探索で値12を探す。先頭から順に比較した場合の比較回数はどれか。",
+    "choices": [
+      "4回",
+      "1回",
+      "3回",
+      "5回"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "4、7、9、12の順に比較して4番目で一致する。",
+      "先頭の値は4である。",
+      "3番目の値は9である。",
+      "配列は4要素しかない。"
+    ],
+    "explanation": "4、7、9、12の順に比較して4番目で一致する。線形探索は先頭から候補を一つずつ調べる。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0001",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "次の関数 calc() の戻り値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: calc()\n  整数型の配列: a ← {2, 5, 8, 11}\n  整数型: i, s ← 0\n  for i ← 1 to 4\n    if a[i] mod 2 = 0 then\n      s ← s + a[i]\n    endif\n  endfor\n  return s",
+    "choices": [
+      "10",
+      "7",
+      "15",
+      "26"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "偶数はa[1]=2とa[3]=8なので、sは0→2→10と変わる。",
+      "5を足して8を除いている。",
+      "奇数も含めた一部の値を足している。",
+      "全要素の合計である。"
+    ],
+    "explanation": "偶数はa[1]=2とa[3]=8なので、sは0→2→10と変わる。戻り値は10である。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0002",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "次の関数 calc(30, 18) の戻り値はどれか。mod は余りを表す。",
+    "code": "○整数型: calc(整数型: x, 整数型: y)\n  整数型: r\n  while y ≠ 0\n    r ← x mod y\n    x ← y\n    y ← r\n  endwhile\n  return x",
+    "choices": [
+      "18",
+      "6",
+      "2",
+      "12"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "最初のyの値である。",
+      "最初に30 mod 18=12、次に18 mod 12=6、最後に12 mod 6=0となる。",
+      "最後の0でない余りは6である。",
+      "最初の余りである。"
+    ],
+    "explanation": "最初に30 mod 18=12、次に18 mod 12=6、最後に12 mod 6=0となる。yが0で止まるとxは6である。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0003",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "次の関数 search() は昇順配列から5を探す。戻り値はどれか。要素番号は1から始まる。",
+    "code": "○整数型: search()\n  整数型の配列: a ← {1, 3, 5, 7, 9}\n  整数型: left ← 1, right ← 5, mid\n  while left ≤ right\n    mid ← (left + right) div 2\n    if a[mid] = 5 then\n      return mid\n    elseif a[mid] < 5 then\n      left ← mid + 1\n    else\n      right ← mid - 1\n    endif\n  endwhile\n  return 0",
+    "choices": [
+      "2",
+      "5",
+      "3",
+      "0"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "a[2]は3である。",
+      "a[5]は9である。",
+      "最初のmidは(1+5) div 2=3である。",
+      "対象値は配列中にある。"
+    ],
+    "explanation": "最初のmidは(1+5) div 2=3である。a[3]=5なので直ちに3を返す。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0004",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "次の関数 reverseDigits(427) の戻り値はどれか。div は整数商、mod は余りを表す。",
+    "code": "○整数型: reverseDigits(整数型: n)\n  整数型: r ← 0\n  while n > 0\n    r ← r × 10 + n mod 10\n    n ← n div 10\n  endwhile\n  return r",
+    "choices": [
+      "427",
+      "742",
+      "72",
+      "724"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "各桁の順序は逆になる。",
+      "2桁目と3桁目の順序が異なる。",
+      "最後の4を反映していない。",
+      "rは0→7→72→724、nは427→42→4→0となる。"
+    ],
+    "explanation": "rは0→7→72→724、nは427→42→4→0となる。したがって戻り値は724である。",
+    "keywords": [
+      "プログラミング"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0005",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "次の関数 countPairs() の戻り値はどれか。",
+    "code": "○整数型: countPairs()\n  整数型: i, j, count ← 0\n  for i ← 1 to 3\n    for j ← 1 to 3\n      if i + j ≥ 5 then\n        count ← count + 1\n      endif\n    endfor\n  endfor\n  return count",
+    "choices": [
+      "3",
+      "2",
+      "4",
+      "9"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "条件を満たす組は(2,3)、(3,2)、(3,3)の3組である。",
+      "(3, 2)などを数え落としている。",
+      "和が4の組も含めている。",
+      "全組合せを数えている。"
+    ],
+    "explanation": "条件を満たす組は(2,3)、(3,2)、(3,3)の3組である。二重ループの戻り値は3になる。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0006",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "次の関数 maxIndex() の戻り値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: maxIndex()\n  整数型の配列: a ← {9, 4, 12, 6}\n  整数型: i, p ← 1\n  for i ← 2 to 4\n    if a[i] > a[p] then\n      p ← i\n    endif\n  endfor\n  return p",
+    "choices": [
+      "4",
+      "3",
+      "1",
+      "2"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "a[4]=6は最大ではない。",
+      "pは初め1で、i=3のとき12>9なので3へ更新される。",
+      "a[1]=9より大きい12がある。",
+      "a[2]=4は最大ではない。"
+    ],
+    "explanation": "pは初め1で、i=3のとき12>9なので3へ更新される。その後は更新されず3を返す。",
+    "keywords": [
+      "データ構造"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0007",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "次の関数 sortSecond() の戻り値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: sortSecond()\n  整数型の配列: a ← {4, 1, 3, 2}\n  整数型: i, j, min, tmp\n  for i ← 1 to 3\n    min ← i\n    for j ← i + 1 to 4\n      if a[j] < a[min] then\n        min ← j\n      endif\n    endfor\n    tmp ← a[i]\n    a[i] ← a[min]\n    a[min] ← tmp\n  endfor\n  return a[2]",
+    "choices": [
+      "3",
+      "4",
+      "2",
+      "1"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "整列後の3番目の要素である。",
+      "整列後の末尾要素である。",
+      "各回で未整列部分の最小値を先頭に移すので、配列は{1,2,3,4}になる。",
+      "整列後の先頭要素である。"
+    ],
+    "explanation": "各回で未整列部分の最小値を先頭に移すので、配列は{1,2,3,4}になる。2番目の要素は2である。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0008",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "次の関数 calc() の戻り値はどれか。",
+    "code": "○整数型: calc()\n  整数型: a ← 1, b ← 1, t, i\n  for i ← 1 to 4\n    t ← a + b\n    a ← b\n    b ← t\n  endfor\n  return a",
+    "choices": [
+      "3",
+      "8",
+      "13",
+      "5"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "繰返しを3回で止めたaの値である。",
+      "4回後のbの値である。",
+      "さらに1回進めたbの値である。",
+      "各回後の(a,b)は(1,2)、(2,3)、(3,5)、(5,8)となる。"
+    ],
+    "explanation": "各回後の(a,b)は(1,2)、(2,3)、(3,5)、(5,8)となる。4回後に返すaは5である。",
+    "keywords": [
+      "プログラミング"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0009",
+    "exam": "fe",
+    "topic": "fe-M02-01",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "次の関数 popAndPush() の戻り値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: popAndPush()\n  整数型の配列: stack ← {3, 8, 5, 0}\n  整数型: top ← 3, removed\n  removed ← stack[top]\n  top ← top - 1\n  stack[top + 1] ← 2\n  top ← top + 1\n  return stack[top]",
+    "choices": [
+      "2",
+      "3",
+      "5",
+      "8"
+    ],
+    "answer": 0,
+    "choiceNotes": [
+      "5を取り出すとtopは2になり、次にstack[3]へ2を入れてtopを3へ戻す。",
+      "先頭側の値であり、最後に積んだ値ではない。",
+      "取り出した値であり、後で上書きされる。",
+      "2番目の値であり、頂上ではない。"
+    ],
+    "explanation": "5を取り出すとtopは2になり、次にstack[3]へ2を入れてtopを3へ戻す。stack[top]は2である。",
+    "keywords": [
+      "データ構造"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0010",
+    "exam": "fe",
+    "topic": "fe-M02-03",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "空欄に入る式として、配列の各要素の累積和を正しく求めるものはどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: prefixLast()\n  整数型の配列: a ← {3, 1, 4}\n  整数型の配列: prefix ← {0, 0, 0}\n  整数型: i\n  prefix[1] ← a[1]\n  for i ← 2 to 3\n    prefix[i] ← 【空欄】\n  endfor\n  return prefix[3]",
+    "choices": [
+      "prefix[i - 1] - a[i]",
+      "prefix[i - 1] + a[i]",
+      "prefix[i] + a[i - 1]",
+      "a[i - 1] + a[i]"
+    ],
+    "answer": 1,
+    "choiceNotes": [
+      "足すべき現在の値を引いている。",
+      "直前までの累積和prefix[i−1]へ現在のa[i]を足す。",
+      "現在位置の累積和はまだ計算されていない。",
+      "3個以上の累積で先頭の値が抜ける。"
+    ],
+    "explanation": "直前までの累積和prefix[i−1]へ現在のa[i]を足す。i=2で4、i=3で8となる。",
+    "keywords": [
+      "プログラミング"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0011",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "B",
+    "question": "次の関数 fact(4) の戻り値はどれか。",
+    "code": "○整数型: fact(整数型: n)\n  if n ≤ 1 then\n    return 1\n  else\n    return n × fact(n - 1)\n  endif",
+    "choices": [
+      "12",
+      "120",
+      "24",
+      "4"
+    ],
+    "answer": 2,
+    "choiceNotes": [
+      "4×3の後の2を掛けていない。",
+      "fact(5)の値である。",
+      "fact(4)=4×fact(3)=4×3×2×1となる。",
+      "4だけで再帰呼出し分を掛けていない。"
+    ],
+    "explanation": "fact(4)=4×fact(3)=4×3×2×1となる。積は24である。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "fe-b-0012",
+    "exam": "fe",
+    "topic": "fe-M02-02",
+    "type": "mcq",
+    "difficulty": 3,
+    "section": "B",
+    "question": "次の関数 distinctCount() の戻り値はどれか。配列の要素番号は1から始まる。",
+    "code": "○整数型: distinctCount()\n  整数型の配列: a ← {2, 2, 4, 4, 7}\n  整数型: i, count ← 1\n  for i ← 2 to 5\n    if a[i] ≠ a[i - 1] then\n      count ← count + 1\n    endif\n  endfor\n  return count",
+    "choices": [
+      "2",
+      "4",
+      "5",
+      "3"
+    ],
+    "answer": 3,
+    "choiceNotes": [
+      "先頭の異なる値を数え落としている。",
+      "同じ値の連続を1回余分に数えている。",
+      "全要素を異なる値として数えている。",
+      "初めの2を1種類と数え、i=3の4とi=5の7で増やす。"
+    ],
+    "explanation": "初めの2を1種類と数え、i=3の4とi=5の7で増やす。戻り値は異なる値の種類数3である。",
+    "keywords": [
+      "アルゴリズム"
+    ],
+    "status": "verified",
+    "origin": "original"
+  }
+]
