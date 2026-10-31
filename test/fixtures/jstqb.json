@@ -1,4 +1,34 @@
 [
-  {"id":"jstqb-test-001","exam":"jstqb","topic":"FL-4.2.2","type":"mcq","difficulty":2,"section":"A","k":3,"question":"境界値分析で優先する値はどれか。","choices":["範囲中央","境界の直前・直後","無作為な値","最大値のみ"],"answer":1,"choiceNotes":["境界ではない","境界付近を調べる","境界を保証しない","片側だけ"],"explanation":"境界の前後を選ぶことで判定の切り替わりを確認します。","status":"verified","origin":"original"},
-  {"id":"jstqb-test-002","exam":"jstqb","topic":"FL-1.1.1","type":"mcq","difficulty":1,"section":"A","k":1,"question":"テストの目的に含まれるものはどれか。","choices":["欠陥の発見","全欠陥の除去保証","コードの自動修正","品質の絶対保証"],"answer":0,"choiceNotes":["目的の一つ","保証はできない","修正は別活動","保証はできない"],"explanation":"テストは欠陥を発見し、品質に関する情報を提供します。","status":"verified","origin":"original"}
+  {
+    "id": "jstqb-test-001",
+    "exam": "jstqb",
+    "topic": "FL-4.2.2",
+    "type": "mcq",
+    "difficulty": 2,
+    "section": "A",
+    "k": 3,
+    "question": "境界値分析で優先する値はどれか。",
+    "choices": ["範囲中央", "境界の直前・直後", "無作為な値", "最大値のみ"],
+    "answer": 1,
+    "choiceNotes": ["境界ではない", "境界付近を調べる", "境界を保証しない", "片側だけ"],
+    "explanation": "境界の前後を選ぶことで判定の切り替わりを確認します。",
+    "status": "verified",
+    "origin": "original"
+  },
+  {
+    "id": "jstqb-test-002",
+    "exam": "jstqb",
+    "topic": "FL-1.1.1",
+    "type": "mcq",
+    "difficulty": 1,
+    "section": "A",
+    "k": 1,
+    "question": "テストの目的に含まれるものはどれか。",
+    "choices": ["欠陥の発見", "全欠陥の除去保証", "コードの自動修正", "品質の絶対保証"],
+    "answer": 0,
+    "choiceNotes": ["目的の一つ", "保証はできない", "修正は別活動", "保証はできない"],
+    "explanation": "テストは欠陥を発見し、品質に関する情報を提供します。",
+    "status": "verified",
+    "origin": "original"
+  }
 ]

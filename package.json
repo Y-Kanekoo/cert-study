@@ -7,7 +7,9 @@
     "validate": "node --import tsx scripts/validate-content.ts",
     "build": "node --import tsx scripts/build.ts",
     "test": "vitest run",
-    "lint": "eslint . && tsc --noEmit",
+    "lint": "eslint . && tsc --noEmit && npm run format:check",
+    "format": "prettier --write src scripts test",
+    "format:check": "prettier --check src scripts test",
     "check": "npm run validate && npm run lint && npm test && npm run build",
     "review:blind": "node --import tsx scripts/blind-export.ts",
     "review:compare": "node --import tsx scripts/blind-export.ts"
@@ -20,6 +22,7 @@
     "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
     "globals": "^17.13.0",
+    "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.1",
