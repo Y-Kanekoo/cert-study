@@ -8,6 +8,16 @@
 | AP | `ap-study` | 科目 A・B |
 | JSTQB FL | `jstqb-study` | Foundation Level |
 
+## 公開 URL（Cloudflare Workers Free + D1 Free）
+
+| アプリ | URL | 検証済み問題数 |
+| --- | --- | --- |
+| 基本情報（FE） | https://fe-study.ykanekoo.workers.dev | 115（科目A 100 / 科目B 15） |
+| 応用情報（AP） | https://ap-study.ykanekoo.workers.dev | 119（科目A 106 / 科目B 記述セルフ採点 13） |
+| JSTQB FL | https://jstqb-study.ykanekoo.workers.dev | 112（全 64 学習目的をカバー） |
+
+3 アプリは同じ D1 データベース `cert-study` を共有し、全テーブルの `exam` 列で分離しています。トークンなしでもローカルモード（端末の localStorage に保存）で使えます。端末間で履歴を同期する場合は、設定画面にアクセストークンを入力します。
+
 ## 機能
 
 - シラバスのツリー閲覧、トピック別練習、難易度・未回答・誤答による絞り込み
@@ -29,18 +39,20 @@ npx wrangler dev --env fe --local
 
 `npm run check` はコンテンツ検証、lint・型検査、テスト、3 試験分のビルドを順に実行します。`dist/<exam>/worker.js` は単一の ES module です。`wrangler.toml` の各環境はビルド済みファイルを `main` とし、Wrangler 4 の `no_bundle = true` を設定しています。ローカル D1 は Wrangler が管理します。
 
-現時点では問題バンクに検証済み問題がなく、画面には 0 問と表示されます。サンプル問題は `test/fixtures` にのみあります。
+テスト用のサンプル問題は `test/fixtures` にあります。配信されるのは `content/` の `status: verified` の問題だけです。
 
-## デプロイ準備
+## デプロイ
 
-1. `npx wrangler login` でログインし、`npx wrangler d1 create cert-study` で D1 を作成します。
-2. 作成された ID を `wrangler.toml` の各 `database_id` に設定します。
+D1 `cert-study` は作成済みで、ID は `wrangler.toml` に設定済みです。初回デプロイ（2026-10-31）は wrangler の認証期限切れのため、Cloudflare API（Workers Scripts API と D1 query API）で次と同じ内容を実行しました。マイグレーション適用済みの記録は `d1_migrations` テーブルに入っています。
+
+1. `npx wrangler login` でログインします。
+2. 既に作成済みのため D1 作成は不要です。
 3. `npm run build` を実行します。
 4. `npx wrangler d1 migrations apply cert-study --remote` でマイグレーションを適用します。
-5. 32 バイト以上のランダムなトークンを手元で用意し、`printf %s "$TOKEN" | shasum -a 256` で SHA-256 を計算します。得られたハッシュを各環境の `TOKEN_SHA256` 変数に設定します。トークンの平文を Worker やリポジトリには置きません。
+5. 32 バイト以上のランダムなトークンを手元で用意し、`printf %s "$TOKEN" | shasum -a 256` で SHA-256 を計算します。得られたハッシュを各環境の `TOKEN_SHA256` 変数に設定します。トークンの平文を Worker やリポジトリには置きません。`wrangler.toml` の `TOKEN_SHA256` は空のため、wrangler でデプロイするときは `--var TOKEN_SHA256:<ハッシュ>` を付けるか、ダッシュボードで変数を設定してください（空のまま上書きするとサーバー同期が無効になります）。
 6. `npx wrangler deploy --env fe`、`--env ap`、`--env jstqb` で各 Worker をデプロイします。
 
-アプリ側では設定画面から平文トークンを入力します。`/#token=...` から一度だけ取り込むこともできます。ブラウザはトークンを試験別の localStorage に保存します。Worker の `TOKEN_SHA256` が空なら進捗 API は 503 を返し、アプリはローカルモードで動きます。ローカル履歴は、接続後に設定画面の「サーバーへ取り込み」から移せます。
+アプリ側では設定画面から平文トークンを入力します。`/#token=...` から一度だけ取り込むこともできます。ブラウザはトークンを試験別の localStorage（`cert-study:<exam>:token`）に保存します。共有端末では使い終わったら設定画面から削除してください。Worker の `TOKEN_SHA256` が空なら進捗 API は 503 を返し、アプリはローカルモードで動きます。ローカル履歴は、接続後に設定画面の「サーバーへ取り込み」から移せます。
 
 ## 問題を追加する
 
@@ -54,8 +66,12 @@ npm run review:compare -- fe answers.json
 
 答えを伏せたファイルは `.cache/blind/<exam>.json` に生成されます。照合用 JSON は `{ "問題ID": 0 }` の形式で、数値は元の選択肢の位置（0〜3）です。
 
+## レビュー記録
+
+- 2026-10-31: 3 試験の全選択式問題を、作成とは別のエージェント実行で答えを伏せて解答（`review:blind`）。全問で正解が一致し、疑義（flagged）は 0 件。加えて人手で約 12 問を抜き取り確認し、誤りなし。一部の誤答選択肢が易しすぎる点は改善課題です。
+
 ## 制約と出典
 
-AP 科目 B は長文記述式の本試験と同等ではなく、短い事例と自由記述のセルフ採点で代替します。模擬試験は収録済みの検証済み問題から構成し、足りない場合は出題数が少なくなります。合否は正答率による目安です。
+AP 科目 B は長文記述式の本試験と同等ではなく、短い事例と自由記述のセルフ採点で代替します。模擬試験は収録済みの検証済み問題から構成し、足りない場合は出題数が少なくなります。合否は正答率による目安です。FE 科目 B は本試験より短く易しめの擬似言語問題です。JSTQB は単一選択のみで、本試験の複数選択形式は未対応です。
 
 採用したシラバスと版、著作権方針は [出典一覧](docs/SOURCES.md) を参照してください。問題文と解説はオリジナルです。
