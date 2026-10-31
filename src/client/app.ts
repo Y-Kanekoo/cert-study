@@ -10,6 +10,7 @@ import {
 import { dueQueue, updateSrs } from '../shared/sm2';
 import { isCorrectChoice, selectedIndices } from '../shared/grading';
 import { inSubtree, topicMap } from '../shared/content';
+import { serializeAttemptsCsv } from '../shared/csv';
 import {
   emptyProgress,
   type Attempt,
@@ -713,7 +714,7 @@ function analytics(): void {
 function settings(): void {
   const local = localProgress();
   shell(
-    `<h2>設定</h2><div class="grid two"><section class="panel"><h3>サーバー接続</h3><form class="form" id="token-form"><label>アクセストークン<input name="token" type="password" autocomplete="off" placeholder="${token() ? '保存済み' : 'トークンを入力'}"></label><button class="btn" type="submit">保存して接続</button></form><p>現在: ${mode === 'server' ? 'サーバー保存' : 'ローカル保存'}</p><button class="btn secondary" id="import" ${mode === 'server' && (local.attempts.length || local.sessions.length) ? '' : 'disabled'}>サーバーへ取り込み（${local.attempts.length}件）</button></section><section class="panel"><h3>学習設定</h3><label class="form">定着チェックの間隔<select id="gap">${[3, 7, 14, 30].map((value) => `<option value="${value}" ${gap() === value ? 'selected' : ''}>${value}日</option>`).join('')}</select></label><div class="actions"><button class="btn secondary" id="export">履歴を JSON で書き出す</button><button class="btn danger" id="reset">履歴をリセット</button></div></section><section class="panel"><h3>出典・版</h3><p>${esc(content.syllabus.source.name)} ${esc(content.syllabus.source.version)}</p><p><a href="${esc(content.syllabus.source.url)}" target="_blank" rel="noopener noreferrer">原典を見る</a></p><p><a href="/sources.md" target="_blank" rel="noopener noreferrer">出典一覧</a></p></section></div>`,
+    `<h2>設定</h2><div class="grid two"><section class="panel"><h3>サーバー接続</h3><form class="form" id="token-form"><label>アクセストークン<input name="token" type="password" autocomplete="off" placeholder="${token() ? '保存済み' : 'トークンを入力'}"></label><button class="btn" type="submit">保存して接続</button></form><p>現在: ${mode === 'server' ? 'サーバー保存' : 'ローカル保存'}</p><button class="btn secondary" id="import" ${mode === 'server' && (local.attempts.length || local.sessions.length) ? '' : 'disabled'}>サーバーへ取り込み（${local.attempts.length}件）</button></section><section class="panel"><h3>学習設定</h3><label class="form">定着チェックの間隔<select id="gap">${[3, 7, 14, 30].map((value) => `<option value="${value}" ${gap() === value ? 'selected' : ''}>${value}日</option>`).join('')}</select></label><div class="actions"><button class="btn secondary" id="export">履歴を JSON で書き出す</button><button class="btn secondary" id="export-csv">回答履歴をCSVで書き出す</button><button class="btn danger" id="reset">履歴をリセット</button></div></section><section class="panel"><h3>出典・版</h3><p>${esc(content.syllabus.source.name)} ${esc(content.syllabus.source.version)}</p><p><a href="${esc(content.syllabus.source.url)}" target="_blank" rel="noopener noreferrer">原典を見る</a></p><p><a href="/sources.md" target="_blank" rel="noopener noreferrer">出典一覧</a></p></section></div>`,
   );
   $('#token-form')?.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -742,6 +743,16 @@ function settings(): void {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `${content.exam.exam}-progress.json`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
+  $('#export-csv')?.addEventListener('click', () => {
+    const blob = new Blob([serializeAttemptsCsv(progress.attempts, content.questions, content.syllabus)], {
+      type: 'text/csv;charset=utf-8',
+    });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${content.exam.exam}-attempts.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
   });
