@@ -3,6 +3,7 @@ import addFormats from 'ajv-formats';
 import { join } from 'node:path';
 import { leafIds, topicMap, validateQuestionLinks } from '../src/shared/content';
 import { exams, loadExam, readJson } from './content';
+import { detectDuplicates } from './duplicates';
 
 async function main(): Promise<void> {
   const schema = await readJson<Record<string, unknown>>(join('content', 'schema', 'question.schema.json'));
@@ -21,6 +22,12 @@ async function main(): Promise<void> {
       console.error(message);
       errors++;
     }
+    const duplicates = detectDuplicates(questions);
+    for (const message of duplicates.errors) {
+      console.error(message);
+      errors++;
+    }
+    for (const message of duplicates.warnings) console.warn(message);
     const verified = questions.filter((q) => q.status === 'verified');
     const map = topicMap(syllabus);
     const answerCounts = [0, 0, 0, 0];
