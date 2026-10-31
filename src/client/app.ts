@@ -770,7 +770,7 @@ async function init(): Promise<void> {
     const pendingToken = location.hash.startsWith('#token=')
       ? decodeURIComponent(location.hash.slice(7))
       : null;
-    if (pendingToken !== null) history.replaceState(null, '', `${location.pathname}${location.search}#home`);
+    if (pendingToken !== null) history.replaceState(null, '', `${location.pathname}${location.search}`);
     content = await api<Content>('/api/content');
     if (pendingToken !== null) localStorage.setItem(tokenKey(), pendingToken);
     await connect();
