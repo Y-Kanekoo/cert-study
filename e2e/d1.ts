@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 
+const D1_MAX_BOUND_PARAMS = 100;
+
 export function createD1(): D1Database {
   const database = new DatabaseSync(':memory:');
   database.exec(readFileSync('migrations/0001_init.sql', 'utf8'));
@@ -8,6 +10,7 @@ export function createD1(): D1Database {
     sql,
     params,
     bind(...values: unknown[]) {
+      if (values.length > D1_MAX_BOUND_PARAMS) throw new Error('too many SQL variables');
       return statement(sql, values);
     },
     first<T>(): T | null {
