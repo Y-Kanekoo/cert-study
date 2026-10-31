@@ -12,6 +12,7 @@ src/shared/                    型・SM-2・採点・模擬試験の抽出ロジ
 src/worker/                    Worker（API ルーティング、認証、D1 アクセス、HTML 配信）
 src/client/                    フロントエンド（依存なしの TypeScript SPA、esbuild でバンドル）
 scripts/validate-content.ts    コンテンツ検証（スキーマ・ID 重複・topic 存在・答え範囲など）
+scripts/stats.ts               検証済み・全件の収録状況を集計
 scripts/build.ts               dist/<exam>/worker.js を生成（クライアント JS/CSS/HTML と verified 問題を埋め込み）
 migrations/                    D1 マイグレーション
 wrangler.toml                  env.fe / env.ap / env.jstqb の3環境
@@ -44,6 +45,7 @@ wrangler.toml                  env.fe / env.ap / env.jstqb の3環境
 | DELETE | `/api/progress` | 要 | リセット（確認用ヘッダ `X-Confirm: reset` 必須） |
 
 入力は全て検証（questionId がバンクに存在するか、mode 列挙値、数値範囲）。エラーは JSON `{error}`。
+複数選択の `choice` は元の選択肢位置をビットにした整数（`1 << index` の和）。未回答は `null` とし、Worker は範囲と `correct` の一致を検証する。
 
 ## 4. D1 スキーマ
 
@@ -59,7 +61,8 @@ wrangler.toml                  env.fe / env.ap / env.jstqb の3環境
 - **定着チェック**: 「最後に正解してから N 日以上（既定 7 日、選択式 3/7/14/30）経過した問題」を、ヒント・解説なしで再出題し、`retention_checks` に記録。定着率 = 再テスト正解率（期間別）。
 - **集計の場所**: 弱点分析・スコア推移・定着率はクライアントが `/api/progress` の生データ（またはローカル履歴）から計算する。Worker は保存と SRS 更新のみ（D1 の 1 回の呼び出しあたりクエリ数を抑えるため、読み出し 1 回＋書き込みは batch）。
 - **弱点分析**: 小分類/学習目的・中分類・大分類ごとに 解答数・正答率・直近10回正答率・定着率 を集計。正答率が低く解答数が十分なトピックを「弱点」として上位表示し、そのトピックの練習へ1タップで移動。
-- **模擬試験**: exam.json の構成比（weight もしくは count）に従い、section で絞った verified 問題から重複なく抽出。不足分は他分野から補う。タイマー付き、途中で解説は出さず最後に採点、分野別スコア表示、合否目安。
+- **模擬試験**: exam.json の構成比（weight もしくは count）に従い、section と `types`（省略時は mcq/multi、セルフ採点は self）で絞った verified 問題から重複なく抽出。不足分は同じ科目・形式の他分野から補う。タイマー付き、途中で解説は出さず最後に採点、分野別スコア表示、合否目安。AP 科目Bは選択式の `ap-B-case` と記述式の `ap-B-self` を分離する。
+- **複数選択（type=multi）**: 4〜5択で正解インデックスを昇順配列で持つ。指定数を選んで解答し、集合が完全一致した場合だけ正解。
 - **セルフ採点（type=self）**: 自由記述 → 模範解答と採点観点を表示 → 自己評価（0/1/2 = できなかった/一部/できた）。q へ変換（0→1, 1→3, 2→4。2 かつ解答 15 秒以内なら 5。選択式も同じ基準）。
 
 ## 6. 画面（日本語・モバイルファースト）
@@ -69,5 +72,5 @@ wrangler.toml                  env.fe / env.ap / env.jstqb の3環境
 ## 7. 制約・方針
 
 - 無料枠のみ（Workers Free + D1 Free）。外部 API・有料 AI API は使わない。
-- 応用情報 科目B は長文記述式のため、短い事例＋記述のセルフ採点で代替（本試験同等ではない）。
+- 応用情報 科目B は長文記述式のため、短い事例の選択式と記述セルフ採点で練習する（本試験同等ではない）。
 - コンテンツは `status: verified` のみ配信。不確実な問題は `flagged` にして除外。
