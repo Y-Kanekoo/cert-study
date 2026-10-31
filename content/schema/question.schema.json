@@ -6,27 +6,488 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "exam", "topic", "type", "difficulty", "section", "question", "explanation", "status", "origin"],
+    "required": [
+      "id",
+      "exam",
+      "topic",
+      "type",
+      "difficulty",
+      "section",
+      "question",
+      "explanation",
+      "status",
+      "origin"
+    ],
     "properties": {
-      "id": { "type": "string", "pattern": "^(fe|ap|jstqb)-[a-z0-9-]+$", "description": "Unique, stable ID. Never reuse or renumber." },
-      "exam": { "enum": ["fe", "ap", "jstqb"] },
-      "topic": { "type": "string", "description": "Leaf node ID in content/<exam>/syllabus.json (IPA 小分類 like fe-M09-03, or JSTQB learning objective like FL-4.2.2)" },
-      "type": { "enum": ["mcq", "self"], "description": "mcq = 4-choice single answer; self = short written answer graded by the learner" },
-      "difficulty": { "type": "integer", "minimum": 1, "maximum": 3 },
-      "section": { "enum": ["A", "B"], "description": "FE/AP: 科目A or 科目B. JSTQB: always A" },
-      "k": { "type": "integer", "minimum": 1, "maximum": 3, "description": "JSTQB K-level of the learning objective" },
-      "question": { "type": "string", "minLength": 10 },
-      "code": { "type": "string", "description": "Optional pseudo-code / table block shown in monospace" },
-      "choices": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string", "minLength": 1 } },
-      "answer": { "type": "integer", "minimum": 0, "maximum": 3, "description": "Index of the correct choice (mcq only)" },
-      "choiceNotes": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" }, "description": "Why each choice is right/wrong" },
-      "modelAnswer": { "type": "string", "description": "self only" },
-      "rubric": { "type": "array", "items": { "type": "string" }, "description": "self only: grading points" },
-      "explanation": { "type": "string", "minLength": 10 },
-      "keywords": { "type": "array", "items": { "type": "string" } },
-      "status": { "enum": ["verified", "draft", "flagged"], "description": "Only verified questions ship to the app" },
-      "origin": { "const": "original", "description": "All questions are original. Never copy past exam questions." },
-      "reviewNote": { "type": "string" }
-    }
+      "id": {
+        "type": "string",
+        "pattern": "^(fe|ap|jstqb)-[a-z0-9-]+$",
+        "description": "Unique, stable ID. Never reuse or renumber."
+      },
+      "exam": {
+        "enum": [
+          "fe",
+          "ap",
+          "jstqb"
+        ]
+      },
+      "topic": {
+        "type": "string",
+        "description": "Leaf node ID in content/<exam>/syllabus.json (IPA 小分類 like fe-M09-03, or JSTQB learning objective like FL-4.2.2)"
+      },
+      "type": {
+        "enum": [
+          "mcq",
+          "multi",
+          "self"
+        ],
+        "description": "mcq = 4択単一、multi = 4〜5択複数、self = 記述セルフ採点"
+      },
+      "difficulty": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 3
+      },
+      "section": {
+        "enum": [
+          "A",
+          "B"
+        ],
+        "description": "FE/AP: 科目A or 科目B. JSTQB: always A"
+      },
+      "k": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 3,
+        "description": "JSTQB K-level of the learning objective"
+      },
+      "question": {
+        "type": "string",
+        "minLength": 10
+      },
+      "code": {
+        "type": "string",
+        "description": "Optional pseudo-code / table block shown in monospace"
+      },
+      "choices": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 5,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 3,
+        "description": "Index of the correct choice (mcq only)"
+      },
+      "choiceNotes": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 5,
+        "items": {
+          "type": "string"
+        },
+        "description": "各選択肢の理由"
+      },
+      "modelAnswer": {
+        "type": "string",
+        "description": "self only"
+      },
+      "rubric": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "self only: grading points"
+      },
+      "explanation": {
+        "type": "string",
+        "minLength": 10
+      },
+      "keywords": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "status": {
+        "enum": [
+          "verified",
+          "draft",
+          "flagged"
+        ],
+        "description": "Only verified questions ship to the app"
+      },
+      "origin": {
+        "const": "original",
+        "description": "All questions are original. Never copy past exam questions."
+      },
+      "reviewNote": {
+        "type": "string"
+      },
+      "answers": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 5,
+        "uniqueItems": true,
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "description": "昇順の正解選択肢インデックス（multi のみ）"
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "type": {
+              "const": "mcq"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        "then": {
+          "required": [
+            "choices",
+            "answer",
+            "choiceNotes"
+          ],
+          "properties": {
+            "choices": {
+              "maxItems": 4
+            },
+            "choiceNotes": {
+              "maxItems": 4
+            }
+          },
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "answers"
+                ]
+              },
+              {
+                "required": [
+                  "modelAnswer"
+                ]
+              },
+              {
+                "required": [
+                  "rubric"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "type": {
+              "const": "multi"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        "then": {
+          "required": [
+            "choices",
+            "answers",
+            "choiceNotes"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "answer"
+                ]
+              },
+              {
+                "required": [
+                  "modelAnswer"
+                ]
+              },
+              {
+                "required": [
+                  "rubric"
+                ]
+              }
+            ]
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "choices": {
+                    "maxItems": 4
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "answers": {
+                    "enum": [
+                      [
+                        0,
+                        1
+                      ],
+                      [
+                        0,
+                        2
+                      ],
+                      [
+                        1,
+                        2
+                      ],
+                      [
+                        0,
+                        1,
+                        2
+                      ],
+                      [
+                        0,
+                        3
+                      ],
+                      [
+                        1,
+                        3
+                      ],
+                      [
+                        0,
+                        1,
+                        3
+                      ],
+                      [
+                        2,
+                        3
+                      ],
+                      [
+                        0,
+                        2,
+                        3
+                      ],
+                      [
+                        1,
+                        2,
+                        3
+                      ],
+                      [
+                        0,
+                        1,
+                        2,
+                        3
+                      ]
+                    ]
+                  },
+                  "choiceNotes": {
+                    "maxItems": 4
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "choices": {
+                    "minItems": 5
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "answers": {
+                    "enum": [
+                      [
+                        0,
+                        1
+                      ],
+                      [
+                        0,
+                        2
+                      ],
+                      [
+                        1,
+                        2
+                      ],
+                      [
+                        0,
+                        1,
+                        2
+                      ],
+                      [
+                        0,
+                        3
+                      ],
+                      [
+                        1,
+                        3
+                      ],
+                      [
+                        0,
+                        1,
+                        3
+                      ],
+                      [
+                        2,
+                        3
+                      ],
+                      [
+                        0,
+                        2,
+                        3
+                      ],
+                      [
+                        1,
+                        2,
+                        3
+                      ],
+                      [
+                        0,
+                        1,
+                        2,
+                        3
+                      ],
+                      [
+                        0,
+                        4
+                      ],
+                      [
+                        1,
+                        4
+                      ],
+                      [
+                        0,
+                        1,
+                        4
+                      ],
+                      [
+                        2,
+                        4
+                      ],
+                      [
+                        0,
+                        2,
+                        4
+                      ],
+                      [
+                        1,
+                        2,
+                        4
+                      ],
+                      [
+                        0,
+                        1,
+                        2,
+                        4
+                      ],
+                      [
+                        3,
+                        4
+                      ],
+                      [
+                        0,
+                        3,
+                        4
+                      ],
+                      [
+                        1,
+                        3,
+                        4
+                      ],
+                      [
+                        0,
+                        1,
+                        3,
+                        4
+                      ],
+                      [
+                        2,
+                        3,
+                        4
+                      ],
+                      [
+                        0,
+                        2,
+                        3,
+                        4
+                      ],
+                      [
+                        1,
+                        2,
+                        3,
+                        4
+                      ],
+                      [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                      ]
+                    ]
+                  },
+                  "choiceNotes": {
+                    "minItems": 5
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "type": {
+              "const": "self"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        "then": {
+          "required": [
+            "modelAnswer",
+            "rubric"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "choices"
+                ]
+              },
+              {
+                "required": [
+                  "answer"
+                ]
+              },
+              {
+                "required": [
+                  "answers"
+                ]
+              },
+              {
+                "required": [
+                  "choiceNotes"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
   }
 }

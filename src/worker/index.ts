@@ -1,4 +1,5 @@
 import { updateSrs } from '../shared/sm2';
+import { isCorrectChoice } from '../shared/grading';
 import type {
   Attempt,
   ExamConfig,
@@ -81,6 +82,11 @@ function validateAttempt(value: unknown): value is Attempt {
   if (q.type === 'mcq') {
     if (!integer(value.choice, 0, 3) && value.choice !== null) return false;
     if (value.correct !== (value.choice === q.answer)) return false;
+    if (value.selfScore != null) return false;
+  }
+  if (q.type === 'multi') {
+    if (!integer(value.choice, 0, (1 << (q.choices?.length ?? 0)) - 1) && value.choice !== null) return false;
+    if (value.correct !== isCorrectChoice(q, value.choice as number | null)) return false;
     if (value.selfScore != null) return false;
   }
   if (
