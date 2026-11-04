@@ -8,7 +8,7 @@ import {
   weakTopics,
 } from '../shared/study';
 import { filterPracticeQuestions, type WrongPeriod } from '../shared/filters';
-import { dueQueue, updateSrs } from '../shared/sm2';
+import { dueQueue, qualityForAttempt, updateSrs } from '../shared/sm2';
 import { isCorrectChoice, selectedIndices } from '../shared/grading';
 import { inSubtree, topicMap } from '../shared/content';
 import { serializeAttemptsCsv } from '../shared/csv';
@@ -140,13 +140,7 @@ function applyAttempts(target: Progress, attempts: Attempt[]): void {
     target.attempts.push(attempt);
     const index = target.srs.findIndex((state) => state.questionId === attempt.questionId);
     const previous = index < 0 ? undefined : target.srs[index];
-    const quality = !attempt.correct
-      ? 1
-      : attempt.lowConfidence || attempt.selfScore === 1
-        ? 3
-        : attempt.elapsedMs <= 15000
-          ? 5
-          : 4;
+    const quality = qualityForAttempt(attempt);
     const state = updateSrs(previous, attempt.questionId, quality, attempt.createdAt);
     if (index < 0) target.srs.push(state);
     else target.srs[index] = state;
