@@ -4,19 +4,18 @@ development-hub のテスト標準（https://github.com/Y-Kanekoo/development-hu
 
 ## 段階とコマンド
 
-| 段階 | コマンド |
+| 段階 | `.local-ci.yml` の実行内容 |
 | --- | --- |
-| static | `npm run lint` / `npm run format:check` / `npm run typecheck` / `npm run secrets` |
-| unit | `npm run test:unit` |
-| api | `npm run test:api`（外部通信は `startFakeServer()` で代替） |
-| e2e | `npx playwright test --grep @smoke` |
+| static | `npm run lint`（ESLint・`tsc --noEmit`・`npm run format:check`）と `node scripts/scan-secrets.mjs`。独立した typecheck ジョブはスキップ |
+| unit | `npm run test`（`test/` の Vitest。Worker API と D1 のテストも含む） |
+| api | 独立した api ジョブはスキップ |
+| e2e | `npm run build` の後に `npx playwright test --grep @smoke` |
 
-まとめて実行: `npm run check`、またはコミット後に `local-ci run .`（段階の絞り込み: `--stage static,unit`）。
+まとめて実行: `local-ci run .`（段階の絞り込み: `--stage static,unit`）。`npm run check` は validate・lint・test・build を実行し、秘密情報スキャンと E2E は含みません。
 
 ## カバレッジ
 
-- unit 段階の下限: 導入時の実測値（記入: ○○%）。引き下げない
-- 下限は引き下げない。計測から外したファイルと理由:（なし）
+- 現在、カバレッジの計測と下限は設定されていません。
 
 ## スキップの記録
 
@@ -24,7 +23,8 @@ development-hub のテスト標準（https://github.com/Y-Kanekoo/development-hu
 
 | 段階 | 理由 | 解除条件 | 記録日 |
 | --- | --- | --- | --- |
-| - | （なし） | - | - |
+| static（typecheck ジョブ） | `package.json` に `typecheck` がない。型検査は `npm run lint` 内の `tsc --noEmit` で実行 | `typecheck` スクリプトを追加して `.local-ci.yml` の skip を解除 | 2026-11-01 |
+| api | `package.json` に `test:api` がない。Worker API のテストは `npm run test` に含まれる | `test:api` スクリプトを追加して `.local-ci.yml` の skip を解除 | 2026-11-01 |
 
 ## 弱体化の確認（レビュー時）
 
