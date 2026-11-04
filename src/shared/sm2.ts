@@ -1,4 +1,10 @@
-import type { SrsState } from './types';
+import type { Attempt, SrsState } from './types';
+
+export function qualityForAttempt(attempt: Attempt): number {
+  if (!attempt.correct) return 1;
+  if (attempt.lowConfidence || attempt.selfScore === 1) return 3;
+  return attempt.elapsedMs <= 15000 ? 5 : 4;
+}
 
 export function updateSrs(
   previous: SrsState | undefined,

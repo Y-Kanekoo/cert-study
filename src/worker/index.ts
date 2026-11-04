@@ -1,4 +1,4 @@
-import { updateSrs } from '../shared/sm2';
+import { qualityForAttempt, updateSrs } from '../shared/sm2';
 import { isCorrectChoice } from '../shared/grading';
 import type {
   Attempt,
@@ -206,14 +206,7 @@ async function recordAttempts(
       attempt.elapsedMs,
       attempt.createdAt,
     ]);
-    // TODO(autonomous): セルフ採点2点の品質値を、ローカル保存側と設計書を含めて統一する。
-    const quality = !attempt.correct
-      ? 1
-      : attempt.lowConfidence || attempt.selfScore === 1
-        ? 3
-        : attempt.elapsedMs <= 15000
-          ? 5
-          : 4;
+    const quality = qualityForAttempt(attempt);
     const state = updateSrs(states.get(attempt.questionId), attempt.questionId, quality, attempt.createdAt);
     states.set(attempt.questionId, state);
     results[index] = state;
